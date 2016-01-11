@@ -19,11 +19,11 @@
 			</div>
 			<?php else:?>
 				<div class="text-center">
-					<label> <?php echo $this->translate("Mensagem Enviada");?> </label>
+					<label> <?php echo $this->translate("Configuração efetuada com sucesso");?> </label>
 				</div>
 				<div class="form-group">
 					<label>&nbsp;</label>					    				
-    				<a href="<?php echo $this->url("application")?>/index/configure?username=<?php echo $number?>&nickname=<?php echo $nickname?>" class="btn btn-primary" type="button" ><?php echo $this->translate("Enviar nova mensagem")?></a>
+    				<a href="<?php echo $this->url("application")?>/index/get-messages" class="btn btn-primary" type="button" ><?php echo $this->translate("Ver as mensagens recebidas")?></a>
 				</div> 
 			<?php endif;?>
 		</div>

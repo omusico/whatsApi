@@ -25,38 +25,16 @@ class IndexController extends AbstractActionController
 	public function getMessagesAction(){
 		
         $debug = false;
-        
+        $result   = array();
         $username = '5511941872988';                      // Telephone number including the country code without '+' or '00'.
-        $nickname = 'Pagina Viva';
+        $nickname = 'pvwhats';
+        $password = "OfDOGOZe4+fmIe3RL+24iprtQk0=";     // Use registerTool.php or exampleRegister.php to obtain your password
+          
+//         $whatsManagerModel = new ManagerWhatsModel($username,$nickname,$debug);
+//         $whatsManagerModel->connectPassword($password);
+//         $result = $whatsManagerModel->getMessages();
+
         
-        $w = new WhatsProt($username, $nickname, $debug);
-        
-        //$w->codeRequest('sms');
-
-
-        //$result = $w->codeRegister('944252');
-        //echo "\nYour username is: ".$result->login."\n";
-        //echo "Your password is: ".$result->pw."\n";
-
-
-        $password = "UBeg+m8T6Iqusp+X9+6DBcvYdno=";     // Use registerTool.php or exampleRegister.php to obtain your password
-        $target = "5511970560486";                   // Destination telephone number including the country code without '+' or '00'.
-
-        $w->connect();
-        $w->loginWithPassword($password);
-		$result = array();
-        //echo $w->sendMessage($target, "Fala aí seu pela saco");
-
-
-        while ($w->pollMessage()){
-            $data = $w->getMessages();
-            foreach ($data as $message) {
-               $mess = $message->getChild("body");
-               $userSendMessage = $message->getAttribute('from');
-               $result[$userSendMessage]['userSend'] = $message->getAttribute('notify');
-               $result[$userSendMessage]['messages'][] = $mess->getData();
-			}
-        }
         return new ViewModel(array('result' => $result));
 	}
 	
@@ -64,8 +42,8 @@ class IndexController extends AbstractActionController
             $request  = $this->getRequest();
             $debug = false;
             $username = '5511941872988';                      // Telephone number including the country code without '+' or '00'.
-            $nickname = 'Pagina Viva';
-            $password = "UBeg+m8T6Iqusp+X9+6DBcvYdno=";     // Use registerTool.php or exampleRegister.php to obtain your password
+            $nickname = 'pvwhats';
+            $password = "OfDOGOZe4+fmIe3RL+24iprtQk0=";     // Use registerTool.php or exampleRegister.php to obtain your password
             
             $whatsManagerModel = new ManagerWhatsModel($username,$nickname);
             $whatsManagerModel->connectPassword($password);
@@ -80,8 +58,9 @@ class IndexController extends AbstractActionController
 	}
 	// return bollean
 	public function registerNumberAction(){
-		$request = $this->getRequest();
-		$debug   = false;
+		
+	    $request = $this->getRequest();
+		$debug   = true;
 		$result  = false;
 		$username = null;
 		$nickname = null;
@@ -91,12 +70,7 @@ class IndexController extends AbstractActionController
 			$nickname = $data['nickname'];
 			
 			$w = new WhatsProt($username, $nickname, $debug);
-			try{
-				$w->codeRequest('sms');
-				$result = true;
-			}catch(\Exception $e){
-				$result = false;
-			}
+		    $result = $w->codeRequest('sms');
 		}
 		
 		return new ViewModel(array('result' => $result,'username' => $username, 'nickname' => $nickname));
@@ -107,14 +81,20 @@ class IndexController extends AbstractActionController
 		$username 	= $this->params()->fromQuery('username',null);
 		$nickname 	= $this->params()->fromQuery('nickname',null);
 		$request  	= $this->getRequest();
-		$debug 		= false;
+		$debug 		= true;
 		$result  	= null;
 		
 		if($request->isPost()){
+		    
+		    
 			$data = $request->getPost();
 			
-            $username = $data['username'];  
-			$nickname = $data['nickname'];
+//             $username = $data['username'];  
+// 			$nickname = $data['nickname'];
+			
+			$username = '5511941872988';
+			$nickname = 'pvwhats';    
+			    
 			$codeRegister = $data['code'];
 			$w = new WhatsProt($username, $nickname, $debug);
 			$result = $w->codeRegister($codeRegister);

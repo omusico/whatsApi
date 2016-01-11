@@ -53,30 +53,46 @@ class ManagerWhatsModel{
         return $result;
     }
     
+    
     public function sendMessage($to, $message,$files){
-        if(!empty($files))
-            $this->sendFiles($to, $files);
         
-        $return = $this->managerWhats->sendMessage($to, $message);
+        if(!empty($files))
+            $return['midias'] = $this->sendFiles($to, $files);
+        
+        if(!empty($message))
+            $return['message'] = $this->managerWhats->sendMessage($to, $message);
+        
         return $return;
     }
     
-    public function onGetMessage( $mynumber, $from, $id, $type, $time, $name, $body )
+    
+    /**
+     * return array();
+     * **/
+    public function getMessages()
     {   
-       $this->events->onGetMessage($mynumber, $from, $id, $type, $time, $name, $body);
+        $result = array();
+        while ($this->managerWhats->pollMessage()){
+                $data = $w->getMessages();
+                foreach ($data as $message) {
+                   $mess = $message->getChild("body");
+                   $userSendMessage = $message->getAttribute('from');
+                   $result[$userSendMessage]['userSend'] = $message->getAttribute('notify');
+                   $result[$userSendMessage]['messages'][] = $mess->getData();
+    			}
+            }
+            
+         return $result;
     }
     
     protected function sendFiles($to,$files){
             
-            \Zend\Debug\Debug::dump($files);
             set_time_limit(600);
             $explode = explode('.', $files['image']['name']);
             $extensao = end($explode);
             $extensao = strtolower($extensao);
             
-          
-            
-            define('CAMINHO_MIDIA', 'c:/xampp5-6/htdocs/PVWhatsApp/public/img/send-messages/');
+            define('CAMINHO_MIDIA', 'c:/xampp5-6/htdocs/whatsApi/public/img/send-messages/');
                         
             if(in_array($extensao, array('3gp', 'mp4', 'mov', 'avi'))){
                 $newName = md5($files['image']['name'].date('Ymdhis')).".".$extensao;
@@ -94,7 +110,7 @@ class ManagerWhatsModel{
             if(in_array($extensao, array('jpg', 'jpeg', 'gif', 'png'))){
                 $newName = md5($files['image']['name'].date('Ymdhis')).".".$extensao;
                 $pathImage = CAMINHO_MIDIA.$newName;
-                echo $urlMain = $_SERVER['HTTP_ORIGIN'].'/img/send-messages/'.$newName;
+                $urlMain = $_SERVER['HTTP_ORIGIN'].'/img/send-messages/'.$newName;
                 
                 if (move_uploaded_file($files['image']['tmp_name'], $pathImage)) {
                     $this->managerWhats->sendMessageImage($to,$urlMain);

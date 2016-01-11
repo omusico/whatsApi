@@ -2416,11 +2416,11 @@ class WhatsProt
             if ($this->mediaFileInfo['filesize'] < $maxsizebytes) {
                 $this->mediaFileInfo['filepath'] = tempnam(__DIR__ . DIRECTORY_SEPARATOR . Constants::DATA_FOLDER . DIRECTORY_SEPARATOR . Constants::MEDIA_FOLDER, 'WHA');
                 file_put_contents($this->mediaFileInfo['filepath'], $media);
-                $extension = explode('.',$filepath);
-                $extension = end($extension);
+                $ext = explode('.', $filepath);
+                $ext = end($ext);
                 $this->mediaFileInfo['filemimetype']  = get_mime($this->mediaFileInfo['filepath']);
-//                $this->mediaFileInfo['fileextension'] = getExtensionFromMime($this->mediaFileInfo['filemimetype']);
-                $this->mediaFileInfo['fileextension'] = $extension;
+//                 $this->mediaFileInfo['fileextension'] = getExtensionFromMime($this->mediaFileInfo['filemimetype']);
+                $this->mediaFileInfo['fileextension'] = $ext;
                 return true;
             } else {
                 return false;
@@ -2430,10 +2430,7 @@ class WhatsProt
             $this->mediaFileInfo['filesize'] = filesize($filepath);
             if ($this->mediaFileInfo['filesize'] < $maxsizebytes) {
                 $this->mediaFileInfo['filepath']      = $filepath;
-                $extension = explode('.',$filepath);
-                $extension = end($extension);
-//                $this->mediaFileInfo['fileextension'] = pathinfo($filepath, PATHINFO_EXTENSION);
-                $this->mediaFileInfo['fileextension'] = $extension;
+                $this->mediaFileInfo['fileextension'] = pathinfo($filepath, PATHINFO_EXTENSION);
                 $this->mediaFileInfo['filemimetype']  = get_mime($filepath);
                 return true;
             } else {

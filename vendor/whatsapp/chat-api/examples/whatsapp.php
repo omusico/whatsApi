@@ -57,7 +57,7 @@ $config['webpassword'] = 'MakeUpPassword';
 //    'emailPassword' => 'gmailpassword'
 //);
 
-$config['BOMBRIL'] = array(
+$config['YOURNAME'] = array(
     'fromNumber' => '441234567890',
     'nick' => "YOURNICKNAME",
     'waPassword' => "EsdfsawS+/ffdskjsdhwebdgxbs=",
