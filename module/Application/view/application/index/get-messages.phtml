@@ -1,0 +1,18 @@
+<div class="container">
+<?php foreach ($result as $key => $values):?>
+				<div class="row" style="margin-bottom: 20px">
+					<div class="col-md-8">
+						<div class="col-md-4">
+							<?php list($number, $whatsAppUrl) = explode('@',$key);?>
+							<label><?php echo $this->translate("Número")?>: <?php echo $number; ?> </label>
+							<label><?php echo $this->translate("Nickname")?>: <?php echo $values['userSend'];?></label>
+						</div>
+						<?php foreach($values['messages'] as $value):?>
+							<div class="col-md-10" style="word-break: break-word; margin-bottom: 15px;"><span><?php echo $value?></span></div>
+						<?php endforeach;?>
+					</div>
+				</div>
+<?php endforeach;?>
+</div> 
+
+    

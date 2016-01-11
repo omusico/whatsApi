@@ -1,0 +1,31 @@
+<div class="container">
+	<div class="row">
+		<div class="col-md-12 col-xs-12">
+			<?php if(!$result): ?>
+			<div class="col-md-6">
+    			<form method="post" action="" enctype="multipart/form-data">  
+    				<div class="form-group">
+        				<label><?php echo $this->translate("Digite o código que recebeu via sms")?></label>
+        				<input class="form-control" name="code" autocomplete="off" minlength="6" maxlength="6" placeholder="123456" id="phone" required="">
+    				</div>
+				   
+					<div class="form-group">
+    					<label>&nbsp;</label>					    				
+        				<input class="btn btn-primary pull-right" type="submit" >
+    				</div> 	
+					<input type="hidden" name="nickname" value="<?php echo $nickname?>">
+					<input type="hidden" name="username" value="<?php echo $username?>">
+    			</form>
+			</div>
+			<?php else:?>
+				<div class="text-center">
+					<label> <?php echo $this->translate("Mensagem Enviada");?> </label>
+				</div>
+				<div class="form-group">
+					<label>&nbsp;</label>					    				
+    				<a href="<?php echo $this->url("application")?>/index/configure?username=<?php echo $number?>&nickname=<?php echo $nickname?>" class="btn btn-primary" type="button" ><?php echo $this->translate("Enviar nova mensagem")?></a>
+				</div> 
+			<?php endif;?>
+		</div>
+	</div>
+</div>

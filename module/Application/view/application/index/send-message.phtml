@@ -1,0 +1,36 @@
+<div class="container">
+	<div class="row">
+		<div class="col-md-12 col-xs-12">
+			<?php if(!$result): ?>
+			<div class="col-md-6">
+    			<form method="post" action="" enctype="multipart/form-data">  
+    				<div class="form-group">
+        				<label><?php echo $this->translate("Número que receberá a mensagem (DDI+DDD+TELEFONE)")?></label>
+        				<input class="form-control" name="to" autocomplete="off" minlength="12" placeholder="55 11 99999-9999" id="phone" required="">
+    				</div>
+				    <div class="form-group">
+        				<label><?php echo $this->translate("Mensagem")?></label>
+        				<textarea class="form-control" name="message" placeholder="Mensagem" maxlength="255" id="mensagem" rows="10" required=""></textarea>
+					</div>
+				    <div class="form-group">
+        				<label><?php echo $this->translate("Enviar imagem")?></label>
+        				<input type="file" class="form-control" name="image" placeholder="Enviar Imagem">
+					</div>
+					<div class="form-group">
+    					<label>&nbsp;</label>					    				
+        				<input class="btn btn-primary pull-right" type="submit" >
+    				</div> 	
+    			</form>
+			</div>
+			<?php else:?>
+				<div class="text-center">
+					<label> <?php echo $this->translate("Mensagem Enviada");?> </label>
+				</div>
+				<div class="form-group">
+					<label>&nbsp;</label>					    				
+    				<a href="<?php echo $this->url("application")?>/index/send-message" class="btn btn-primary" type="button" ><?php echo $this->translate("Enviar nova mensagem")?></a>
+				</div> 
+			<?php endif;?>
+		</div>
+	</div>
+</div>

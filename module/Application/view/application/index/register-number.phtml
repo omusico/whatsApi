@@ -1,0 +1,32 @@
+<div class="container">
+	<div class="row">
+		<div class="col-md-12 col-xs-12">
+			<?php if(!$result): ?>
+			<div class="col-md-6">
+    			<form method="post" action="" enctype="multipart/form-data">  
+    				<div class="form-group">
+        				<label><?php echo $this->translate("Número que receberá a mensagem (DDI+DDD+TELEFONE) com o codigo do registro")?></label>
+        				<input class="form-control" name="number" autocomplete="off" minlength="12" placeholder="55 11 99999-9999" id="phone" required="">
+    				</div>
+				    <div class="form-group">
+        				<label><?php echo $this->translate("Nickname")?></label>
+        				<input class="form-control" name="nickname" autocomplete="off" minlength="5" placeholder="Nickname" required="">
+					</div>
+					<div class="form-group">
+    					<label>&nbsp;</label>					    				
+        				<input class="btn btn-primary pull-right" type="submit" >
+    				</div> 	
+    			</form>
+			</div>
+			<?php else:?>
+				<div class="text-center">
+					<label> <?php echo $this->translate("Mensagem Enviada");?> </label>
+				</div>
+				<div class="form-group">
+					<label>&nbsp;</label>					    				
+    				<a href="<?php echo $this->url("application")?>/index/configure?username=<?php echo $number?>&nickname=<?php echo $nickname?>" class="btn btn-primary" type="button" ><?php echo $this->translate("Enviar nova mensagem")?></a>
+				</div> 
+			<?php endif;?>
+		</div>
+	</div>
+</div>
