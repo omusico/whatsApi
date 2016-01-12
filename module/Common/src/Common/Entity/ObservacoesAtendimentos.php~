@@ -31,9 +31,9 @@ class ObservacoesAtendimentos
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="date", type="datetime", nullable=false)
+     * @ORM\Column(name="data", type="datetime", nullable=false)
      */
-    private $date = 'CURRENT_TIMESTAMP';
+    private $data = 'CURRENT_TIMESTAMP';
 
     /**
      * @var \Common\Entity\Atendimentos

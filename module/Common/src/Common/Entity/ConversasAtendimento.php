@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * ConversasAtendimento
  *
- * @ORM\Table(name="conversas_atendimento", indexes={@ORM\Index(name="fk_conversas_atendimento_atendimentos1_idx", columns={"id_atendimento_conversas"})})
+ * @ORM\Table(name="conversas_atendimento", indexes={@ORM\Index(name="fk_conversas_atendimento_atendimentos1_idx", columns={"id_atendimento_conversas"}), @ORM\Index(name="fk_conversas_atendimento_status_conversas1_idx", columns={"id_status_conversas"})})
  * @ORM\Entity
  */
 class ConversasAtendimento
@@ -36,18 +36,18 @@ class ConversasAtendimento
     private $nmrContato;
 
     /**
-     * @var \DateTime
+     * @var string
      *
-     * @ORM\Column(name="date", type="datetime", nullable=false)
+     * @ORM\Column(name="mensagem", type="text", length=65535, nullable=false)
      */
-    private $date = 'CURRENT_TIMESTAMP';
+    private $mensagem;
 
     /**
-     * @var integer
+     * @var \DateTime
      *
-     * @ORM\Column(name="status_mensagem_atendimento", type="integer", nullable=true)
+     * @ORM\Column(name="data_conversa_atendimento", type="datetime", nullable=false)
      */
-    private $statusMensagemAtendimento;
+    private $dataConversaAtendimento = 'CURRENT_TIMESTAMP';
 
     /**
      * @var \Common\Entity\Atendimentos
@@ -58,6 +58,16 @@ class ConversasAtendimento
      * })
      */
     private $idAtendimentoConversas;
+
+    /**
+     * @var \Common\Entity\StatusConversas
+     *
+     * @ORM\ManyToOne(targetEntity="Common\Entity\StatusConversas")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="id_status_conversas", referencedColumnName="id_status_conversas")
+     * })
+     */
+    private $idStatusConversas;
 
 
 
@@ -120,51 +130,51 @@ class ConversasAtendimento
     }
 
     /**
-     * Set date
+     * Set mensagem
      *
-     * @param \DateTime $date
+     * @param string $mensagem
      *
      * @return ConversasAtendimento
      */
-    public function setDate($date)
+    public function setMensagem($mensagem)
     {
-        $this->date = $date;
+        $this->mensagem = $mensagem;
 
         return $this;
     }
 
     /**
-     * Get date
+     * Get mensagem
+     *
+     * @return string
+     */
+    public function getMensagem()
+    {
+        return $this->mensagem;
+    }
+
+    /**
+     * Set dataConversaAtendimento
+     *
+     * @param \DateTime $dataConversaAtendimento
+     *
+     * @return ConversasAtendimento
+     */
+    public function setDataConversaAtendimento($dataConversaAtendimento)
+    {
+        $this->dataConversaAtendimento = $dataConversaAtendimento;
+
+        return $this;
+    }
+
+    /**
+     * Get dataConversaAtendimento
      *
      * @return \DateTime
      */
-    public function getDate()
+    public function getDataConversaAtendimento()
     {
-        return $this->date;
-    }
-
-    /**
-     * Set statusMensagemAtendimento
-     *
-     * @param integer $statusMensagemAtendimento
-     *
-     * @return ConversasAtendimento
-     */
-    public function setStatusMensagemAtendimento($statusMensagemAtendimento)
-    {
-        $this->statusMensagemAtendimento = $statusMensagemAtendimento;
-
-        return $this;
-    }
-
-    /**
-     * Get statusMensagemAtendimento
-     *
-     * @return integer
-     */
-    public function getStatusMensagemAtendimento()
-    {
-        return $this->statusMensagemAtendimento;
+        return $this->dataConversaAtendimento;
     }
 
     /**
@@ -189,5 +199,29 @@ class ConversasAtendimento
     public function getIdAtendimentoConversas()
     {
         return $this->idAtendimentoConversas;
+    }
+
+    /**
+     * Set idStatusConversas
+     *
+     * @param \Common\Entity\StatusConversas $idStatusConversas
+     *
+     * @return ConversasAtendimento
+     */
+    public function setIdStatusConversas(\Common\Entity\StatusConversas $idStatusConversas = null)
+    {
+        $this->idStatusConversas = $idStatusConversas;
+
+        return $this;
+    }
+
+    /**
+     * Get idStatusConversas
+     *
+     * @return \Common\Entity\StatusConversas
+     */
+    public function getIdStatusConversas()
+    {
+        return $this->idStatusConversas;
     }
 }

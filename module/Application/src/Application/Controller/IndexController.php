@@ -30,9 +30,9 @@ class IndexController extends AbstractActionController
         $nickname = 'pvwhats';
         $password = "OfDOGOZe4+fmIe3RL+24iprtQk0=";     // Use registerTool.php or exampleRegister.php to obtain your password
           
-//         $whatsManagerModel = new ManagerWhatsModel($username,$nickname,$debug);
-//         $whatsManagerModel->connectPassword($password);
-//         $result = $whatsManagerModel->getMessages();
+        $whatsManagerModel = new ManagerWhatsModel($username,$nickname,$debug,$this->getEntityManager());
+        $whatsManagerModel->connectPassword($password);
+        $result = $whatsManagerModel->getMessages();
 
         
         return new ViewModel(array('result' => $result));
@@ -45,7 +45,7 @@ class IndexController extends AbstractActionController
             $nickname = 'pvwhats';
             $password = "OfDOGOZe4+fmIe3RL+24iprtQk0=";     // Use registerTool.php or exampleRegister.php to obtain your password
             
-            $whatsManagerModel = new ManagerWhatsModel($username,$nickname);
+            $whatsManagerModel = new ManagerWhatsModel($username,$nickname,$debug,$this->getEntityManager());
             $whatsManagerModel->connectPassword($password);
             
             $result   = false;
@@ -53,6 +53,7 @@ class IndexController extends AbstractActionController
                 $data   = $request->getPost();
                 $files  = $request->getFiles();
                 $result = $whatsManagerModel->sendMessage($data['to'], $data['message'], $files) ;
+                
             }
             return new ViewModel(array('result' => $result));
 	}

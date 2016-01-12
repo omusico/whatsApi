@@ -31,9 +31,9 @@ class ObservacoesAtendimentos
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="date", type="datetime", nullable=false)
+     * @ORM\Column(name="data", type="datetime", nullable=false)
      */
-    private $date = 'CURRENT_TIMESTAMP';
+    private $data = 'CURRENT_TIMESTAMP';
 
     /**
      * @var \Common\Entity\Atendimentos
@@ -82,27 +82,27 @@ class ObservacoesAtendimentos
     }
 
     /**
-     * Set date
+     * Set data
      *
-     * @param \DateTime $date
+     * @param \DateTime $data
      *
      * @return ObservacoesAtendimentos
      */
-    public function setDate($date)
+    public function setData($data)
     {
-        $this->date = $date;
+        $this->data = $data;
 
         return $this;
     }
 
     /**
-     * Get date
+     * Get data
      *
      * @return \DateTime
      */
-    public function getDate()
+    public function getData()
     {
-        return $this->date;
+        return $this->data;
     }
 
     /**

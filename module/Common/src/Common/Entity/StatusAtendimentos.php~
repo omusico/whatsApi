@@ -1,0 +1,33 @@
+<?php
+
+namespace Common\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * StatusAtendimentos
+ *
+ * @ORM\Table(name="status_atendimentos")
+ * @ORM\Entity
+ */
+class StatusAtendimentos
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id_status_atendimentos", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idStatusAtendimentos;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="status_atendimentos", type="string", length=45, nullable=false)
+     */
+    private $statusAtendimentos;
+
+
+}
+

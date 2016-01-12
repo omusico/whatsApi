@@ -1,0 +1,47 @@
+<?php
+
+namespace Common\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Logs
+ *
+ * @ORM\Table(name="logs")
+ * @ORM\Entity
+ */
+class Logs
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id_logs", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idLogs;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="descricao_logs", type="string", length=255, nullable=false)
+     */
+    private $descricaoLogs;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="descricao_acao_logs", type="string", length=45, nullable=true)
+     */
+    private $descricaoAcaoLogs;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="data_logs", type="datetime", nullable=false)
+     */
+    private $dataLogs = 'CURRENT_TIMESTAMP';
+
+
+}
+

@@ -4,28 +4,39 @@ namespace Application\Model;
 
 
 use MyEvents\MyEvents;
+use Common\Entity\ConversasAtendimento;
+use Doctrine\ORM\EntityManager;
+use Common\Entity\Logs;
+use Common\Entity\Atendimentos;
+use Common\Entity\Usuarios;
 class ManagerWhatsModel{
     
-     /**
-     * .
-     *
-     * @var \WhatsProt
-     */
-    private $managerWhats;
-    
     /**
-     * 
-     * 
-     * @param string $nickname*/
+     * @var \WhatsProt
+     * */
+    private $managerWhats;
+    /**
+     * @param string $nickname
+     * */
     private $password;
-    /***
+    /**
      * @var MyEvents
      * */
     private $events;
+    /**
+     * @var EntityManager
+     * */
+    private $entityManager;
+    /**
+     * @var Usuarios
+     * */
+    private $users;
     
-    public function __construct($username = null,$nickname = null){
-        $this->setWhatsProt($username, $nickname);
-        $this->events = new \MyEvents($this->managerWhats);
+    public function __construct($username = null,$nickname = null, $debug = false,EntityManager $entityManager,Usuarios $users = null){
+        $this->setWhatsProt($username, $nickname,$debug);
+        $this->events           = new \MyEvents($this->managerWhats);
+        $this->entityManager    = $entityManager;
+        $this->users            = $users;
     }
     
     public function setWhatsProt($username = null ,$nickname = null ,$debug = false){
@@ -59,12 +70,80 @@ class ManagerWhatsModel{
         if(!empty($files))
             $return['midias'] = $this->sendFiles($to, $files);
         
-        if(!empty($message))
+        if(!empty($message)){
             $return['message'] = $this->managerWhats->sendMessage($to, $message);
-        
+            
+            if(empty($return['message']))
+                $this->setLogTalk('Enviar Mensagem:'.$to, "Não foi possível enviar a mensagem para o cliente");
+        }        
         return $return;
     }
     
+    
+    
+    public function storageServiceClient($protocolService){
+        $serviceClient = new Atendimentos();
+        $serviceClient->setIdStatusAtendimentos($this->entityManager->getRepository('Common\Entity\StatusAtendimentos')->findOneBy(array('idStatusAtendimentos' => 1)));
+        $serviceClient->setIdUsuarioAtendimento($this->users);
+        $serviceClient->setProtocoloAtendimento($protocolService);
+        $serviceClient->setDataAtendimento(new \DateTime('now'));
+        try{
+            $this->entityManager->persist($serviceClient);
+            $this->entityManager->flush();
+        }catch(\Exception $e){
+            $this->setLogTalk("Criação novo atendimento", $e->getMessage());
+            return false;
+        }
+        return $serviceClient;
+    }
+    
+    public function storageMessage($from, $contactName, $message , $isOperator = null){
+        
+        $serviceClient = $this->entityManager->getRepository('Common\Entity\Atendimentos')->findOneBy(array(''));
+        if(empty($serviceClient)){
+                $date               = date('Ymdhis');
+                $protocolService    = md5($from.date);
+                $serviceClient      = $this->storageServiceClient($protocolService);
+        }
+        
+        $talk = new ConversasAtendimento();
+        $talk->setDate(new \DateTime('now'));
+        $talk->setNmrContato($from);
+        $talk->setNomeContato($contactName);
+        $talk->setMensagem($message);
+        $talk->setIdAtendimentoConversas($serviceClient);
+        if($isOperator)
+            $talk->setStatusMensagemAtendimento($this->entityManager->getRepository('Common\Entity\StatusConversas')->findOneBy(array('idStatusConversa'=> 1)));
+        else
+            $talk->setStatusMensagemAtendimento($this->entityManager->getRepository('Common\Entity\StatusConversas')->findOneBy(array('idStatusConversa'=> 2)));
+        
+        try{
+            $this->entityManager->persist($talk);
+            $this->entityManager->flush();
+            
+        }catch(\Exception $e){
+            $this->setLogTalk('Gravar conversa:'.$from, $e->getMessage());
+            return false;
+        }
+        
+        return true;
+        
+    }
+        
+    public function setLogTalk($ação,$erro){
+        $log = new Logs();
+        $log->setDate(new \DateTime('now'));
+        $log->setDescricaoLogs($erro);
+        $log->setDescricaoAcaoLogs($ação);
+        
+        try{
+            $this->entityManager->persist($log);
+            $this->entityManager->flush();
+        }catch(\Exception $e){
+            throw new \Exception("Não foi possível guardar as mensagens recebidas");
+        }
+        
+    }
     
     /**
      * return array();
@@ -73,12 +152,14 @@ class ManagerWhatsModel{
     {   
         $result = array();
         while ($this->managerWhats->pollMessage()){
-                $data = $w->getMessages();
+                $data = $this->managerWhats->getMessages();
                 foreach ($data as $message) {
                    $mess = $message->getChild("body");
                    $userSendMessage = $message->getAttribute('from');
                    $result[$userSendMessage]['userSend'] = $message->getAttribute('notify');
                    $result[$userSendMessage]['messages'][] = $mess->getData();
+                   
+                   $this->storageMessage($userSendMessage, $message->getAttribute('notify'), $mess->getData());
     			}
             }
             
@@ -102,8 +183,9 @@ class ManagerWhatsModel{
                 if (move_uploaded_file($files['image']['tmp_name'], $pathImage)) {
                     $this->managerWhats->sendMessageVideo($to,$urlMain);
                     $this->managerWhats->pollMessage();
+                   
                 } else {
-                    echo "Possível ataque de upload de arquivo!\n";
+                    $this->setLogTalk("Enviar image:".$to, "Não foi possível enviar a mídia");
                 }
             }
         
@@ -116,7 +198,7 @@ class ManagerWhatsModel{
                     $this->managerWhats->sendMessageImage($to,$urlMain);
                     $this->managerWhats->pollMessage();
                 } else {
-                    echo "Possível ataque de upload de arquivo!\n";
+                   $this->setLogTalk("Enviar image:".$to, "Não foi possível enviar a mídia");
                 }
             }
         
@@ -130,7 +212,7 @@ class ManagerWhatsModel{
                     $this->managerWhats->sendMessageAudio($to,$urlMain);
                     $this->managerWhats->pollMessage();
                 } else {
-                    echo "Possível ataque de upload de arquivo!\n";
+                    $this->setLogTalk("Enviar image:".$to, "Não foi possível enviar a mídia");
                 }
             }
             return true;

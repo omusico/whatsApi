@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Usuarios
  *
- * @ORM\Table(name="usuarios")
+ * @ORM\Table(name="usuarios", indexes={@ORM\Index(name="fk_usuarios_status_usuarios1_idx", columns={"id_status_usuarios"})})
  * @ORM\Entity
  */
 class Usuarios
@@ -50,11 +50,21 @@ class Usuarios
     private $senhaWhatsap;
 
     /**
-     * @var integer
+     * @var string
      *
-     * @ORM\Column(name="status", type="integer", nullable=true)
+     * @ORM\Column(name="data_criacao", type="string", length=45, nullable=true)
      */
-    private $status;
+    private $dataCriacao;
+
+    /**
+     * @var \Common\Entity\StatusUsuarios
+     *
+     * @ORM\ManyToOne(targetEntity="Common\Entity\StatusUsuarios")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="id_status_usuarios", referencedColumnName="id_status_usuarios")
+     * })
+     */
+    private $idStatusUsuarios;
 
 
 
@@ -165,26 +175,50 @@ class Usuarios
     }
 
     /**
-     * Set status
+     * Set dataCriacao
      *
-     * @param integer $status
+     * @param string $dataCriacao
      *
      * @return Usuarios
      */
-    public function setStatus($status)
+    public function setDataCriacao($dataCriacao)
     {
-        $this->status = $status;
+        $this->dataCriacao = $dataCriacao;
 
         return $this;
     }
 
     /**
-     * Get status
+     * Get dataCriacao
      *
-     * @return integer
+     * @return string
      */
-    public function getStatus()
+    public function getDataCriacao()
     {
-        return $this->status;
+        return $this->dataCriacao;
+    }
+
+    /**
+     * Set idStatusUsuarios
+     *
+     * @param \Common\Entity\StatusUsuarios $idStatusUsuarios
+     *
+     * @return Usuarios
+     */
+    public function setIdStatusUsuarios(\Common\Entity\StatusUsuarios $idStatusUsuarios = null)
+    {
+        $this->idStatusUsuarios = $idStatusUsuarios;
+
+        return $this;
+    }
+
+    /**
+     * Get idStatusUsuarios
+     *
+     * @return \Common\Entity\StatusUsuarios
+     */
+    public function getIdStatusUsuarios()
+    {
+        return $this->idStatusUsuarios;
     }
 }

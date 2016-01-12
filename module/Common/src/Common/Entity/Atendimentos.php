@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Atendimentos
  *
- * @ORM\Table(name="atendimentos", uniqueConstraints={@ORM\UniqueConstraint(name="protocolo_atendimento_UNIQUE", columns={"protocolo_atendimento"})}, indexes={@ORM\Index(name="fk_atendimentos_usuarios_idx", columns={"id_usuario_atendimento"})})
+ * @ORM\Table(name="atendimentos", uniqueConstraints={@ORM\UniqueConstraint(name="protocolo_atendimento_UNIQUE", columns={"protocolo_atendimento"})}, indexes={@ORM\Index(name="fk_atendimentos_usuarios_idx", columns={"id_usuario_atendimento"}), @ORM\Index(name="fk_atendimentos_status_atendimentos1_idx", columns={"Id_status_atendimentos"})})
  * @ORM\Entity
  */
 class Atendimentos
@@ -29,11 +29,21 @@ class Atendimentos
     private $protocoloAtendimento;
 
     /**
-     * @var integer
+     * @var \DateTime
      *
-     * @ORM\Column(name="status_atendimento", type="integer", nullable=true)
+     * @ORM\Column(name="data_atendimento", type="datetime", nullable=false)
      */
-    private $statusAtendimento;
+    private $dataAtendimento = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var \Common\Entity\StatusAtendimentos
+     *
+     * @ORM\ManyToOne(targetEntity="Common\Entity\StatusAtendimentos")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="Id_status_atendimentos", referencedColumnName="id_status_atendimentos")
+     * })
+     */
+    private $idStatusAtendimentos;
 
     /**
      * @var \Common\Entity\Usuarios
@@ -82,27 +92,51 @@ class Atendimentos
     }
 
     /**
-     * Set statusAtendimento
+     * Set dataAtendimento
      *
-     * @param integer $statusAtendimento
+     * @param \DateTime $dataAtendimento
      *
      * @return Atendimentos
      */
-    public function setStatusAtendimento($statusAtendimento)
+    public function setDataAtendimento($dataAtendimento)
     {
-        $this->statusAtendimento = $statusAtendimento;
+        $this->dataAtendimento = $dataAtendimento;
 
         return $this;
     }
 
     /**
-     * Get statusAtendimento
+     * Get dataAtendimento
      *
-     * @return integer
+     * @return \DateTime
      */
-    public function getStatusAtendimento()
+    public function getDataAtendimento()
     {
-        return $this->statusAtendimento;
+        return $this->dataAtendimento;
+    }
+
+    /**
+     * Set idStatusAtendimentos
+     *
+     * @param \Common\Entity\StatusAtendimentos $idStatusAtendimentos
+     *
+     * @return Atendimentos
+     */
+    public function setIdStatusAtendimentos(\Common\Entity\StatusAtendimentos $idStatusAtendimentos = null)
+    {
+        $this->idStatusAtendimentos = $idStatusAtendimentos;
+
+        return $this;
+    }
+
+    /**
+     * Get idStatusAtendimentos
+     *
+     * @return \Common\Entity\StatusAtendimentos
+     */
+    public function getIdStatusAtendimentos()
+    {
+        return $this->idStatusAtendimentos;
     }
 
     /**
