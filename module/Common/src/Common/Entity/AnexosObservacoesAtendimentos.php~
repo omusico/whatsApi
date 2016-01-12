@@ -1,0 +1,43 @@
+<?php
+
+namespace Common\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * AnexosObservacoesAtendimentos
+ *
+ * @ORM\Table(name="anexos_observacoes_atendimentos", indexes={@ORM\Index(name="fk_anexos_observacoes_atendimentos_observacoes_atendimentos_idx", columns={"id_observacao_atendimento"})})
+ * @ORM\Entity
+ */
+class AnexosObservacoesAtendimentos
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id_anexos_observacoes_atendimentos", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idAnexosObservacoesAtendimentos;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nome_anexo", type="string", length=60, nullable=false)
+     */
+    private $nomeAnexo;
+
+    /**
+     * @var \Common\Entity\ObservacoesAtendimentos
+     *
+     * @ORM\ManyToOne(targetEntity="Common\Entity\ObservacoesAtendimentos")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="id_observacao_atendimento", referencedColumnName="id_observacoes_atendimento")
+     * })
+     */
+    private $idObservacaoAtendimento;
+
+
+}
+

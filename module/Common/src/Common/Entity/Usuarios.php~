@@ -1,0 +1,61 @@
+<?php
+
+namespace Common\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Usuarios
+ *
+ * @ORM\Table(name="usuarios")
+ * @ORM\Entity
+ */
+class Usuarios
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id_usuarios", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idUsuarios;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nome_usuario", type="string", length=45, nullable=true)
+     */
+    private $nomeUsuario;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="senha_usuario", type="string", length=45, nullable=true)
+     */
+    private $senhaUsuario;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="nm_whatsapp", type="integer", nullable=true)
+     */
+    private $nmWhatsapp;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="senha_whatsap", type="string", length=12, nullable=true)
+     */
+    private $senhaWhatsap;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="status", type="integer", nullable=true)
+     */
+    private $status;
+
+
+}
+
