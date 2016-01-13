@@ -36,7 +36,7 @@ class ManagerWhatsModel{
         $this->setWhatsProt($username, $nickname,$debug);
         $this->events           = new \MyEvents($this->managerWhats);
         $this->entityManager    = $entityManager;
-        $this->users            = $this->entityManager->getRepository('Common\Entity\Usuarios')->findOneBy(array('idUsuarios' => 1));
+        $this->users            = $this->entityManager->getRepository('Common\Entity\Usuarios')->findOneBy(array('idUsuarios' => 2));
     }
     
     public function setWhatsProt($username = null ,$nickname = null ,$debug = false){
@@ -86,7 +86,7 @@ class ManagerWhatsModel{
     public function storageServiceClient($protocolService,$nmrContato){
         $result = true;
         $serviceClient = new Atendimentos();
-        $serviceClient->setIdStatusAtendimentos($this->entityManager->getRepository('Common\Entity\StatusAtendimentos')->findOneBy(array('idStatusAtendimentos' => 1)));
+        $serviceClient->setIdStatusAtendimentos($this->entityManager->getRepository('Common\Entity\StatusAtendimentos')->findOneBy(array('idStatusAtendimentos' => 5)));
         $serviceClient->setIdUsuarioAtendimento($this->users);
         $serviceClient->setProtocoloAtendimento($protocolService);
         $serviceClient->setDataAtendimento(new \DateTime('now'));
@@ -110,7 +110,7 @@ class ManagerWhatsModel{
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('atendimento')
             ->from('Common\Entity\Atendimentos','atendimento')
-            ->where('atendimento.nmrContato = :to OR atendimento.nmrContato = :from AND atendimento.idStatusAtendimentos IN (1,3)')
+            ->where('atendimento.nmrContato = :to OR atendimento.nmrContato = :from AND atendimento.idStatusAtendimentos IN (5,6)')
             ->setParameters(array('to' => $to, 'from' => $from));
         
         $serviceClient = $qb->getQuery()->getArrayResult();
@@ -131,9 +131,9 @@ class ManagerWhatsModel{
         $talk->setIdAtendimentoConversas($serviceClient);
         
         if($isOperator)
-            $talk->setIdStatusConversas($this->entityManager->getRepository('Common\Entity\StatusConversas')->findOneBy(array('idStatusConversas'=> 1)));
+            $talk->setIdStatusConversas($this->entityManager->getRepository('Common\Entity\StatusConversas')->findOneBy(array('idStatusConversas'=> 3)));
         else
-            $talk->setIdStatusConversas($this->entityManager->getRepository('Common\Entity\StatusConversas')->findOneBy(array('idStatusConversas'=> 2)));
+            $talk->setIdStatusConversas($this->entityManager->getRepository('Common\Entity\StatusConversas')->findOneBy(array('idStatusConversas'=> 4)));
             
         try{
             $this->entityManager->persist($talk);
