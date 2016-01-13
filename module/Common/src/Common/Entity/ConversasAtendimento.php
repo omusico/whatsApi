@@ -24,16 +24,16 @@ class ConversasAtendimento
     /**
      * @var string
      *
-     * @ORM\Column(name="nome_contato", type="string", length=45, nullable=true)
+     * @ORM\Column(name="nmr_enviado", type="string", length=13, nullable=false)
      */
-    private $nomeContato;
+    private $nmrEnviado;
 
     /**
-     * @var integer
+     * @var string
      *
-     * @ORM\Column(name="nmr_contato", type="integer", nullable=false)
+     * @ORM\Column(name="nmr_recebido", type="string", length=13, nullable=false)
      */
-    private $nmrContato;
+    private $nmrRecebido;
 
     /**
      * @var string
@@ -82,51 +82,51 @@ class ConversasAtendimento
     }
 
     /**
-     * Set nomeContato
+     * Set nmrEnviado
      *
-     * @param string $nomeContato
+     * @param string $nmrEnviado
      *
      * @return ConversasAtendimento
      */
-    public function setNomeContato($nomeContato)
+    public function setNmrEnviado($nmrEnviado)
     {
-        $this->nomeContato = $nomeContato;
+        $this->nmrEnviado = $nmrEnviado;
 
         return $this;
     }
 
     /**
-     * Get nomeContato
+     * Get nmrEnviado
      *
      * @return string
      */
-    public function getNomeContato()
+    public function getNmrEnviado()
     {
-        return $this->nomeContato;
+        return $this->nmrEnviado;
     }
 
     /**
-     * Set nmrContato
+     * Set nmrRecebido
      *
-     * @param integer $nmrContato
+     * @param string $nmrRecebido
      *
      * @return ConversasAtendimento
      */
-    public function setNmrContato($nmrContato)
+    public function setNmrRecebido($nmrRecebido)
     {
-        $this->nmrContato = $nmrContato;
+        $this->nmrRecebido = $nmrRecebido;
 
         return $this;
     }
 
     /**
-     * Get nmrContato
+     * Get nmrRecebido
      *
-     * @return integer
+     * @return string
      */
-    public function getNmrContato()
+    public function getNmrRecebido()
     {
-        return $this->nmrContato;
+        return $this->nmrRecebido;
     }
 
     /**

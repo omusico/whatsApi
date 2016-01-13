@@ -36,25 +36,25 @@ class Usuarios
     private $senhaUsuario;
 
     /**
-     * @var integer
+     * @var float
      *
-     * @ORM\Column(name="nm_whatsapp", type="integer", nullable=true)
+     * @ORM\Column(name="nm_whatsapp", type="float", precision=10, scale=0, nullable=false)
      */
     private $nmWhatsapp;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="senha_whatsap", type="string", length=12, nullable=true)
+     * @ORM\Column(name="senha_whatsap", type="string", length=12, nullable=false)
      */
     private $senhaWhatsap;
 
     /**
-     * @var string
+     * @var \DateTime
      *
-     * @ORM\Column(name="data_criacao", type="string", length=45, nullable=true)
+     * @ORM\Column(name="data_criacao", type="datetime", nullable=true)
      */
-    private $dataCriacao;
+    private $dataCriacao = 'CURRENT_TIMESTAMP';
 
     /**
      * @var \Common\Entity\StatusUsuarios
@@ -129,7 +129,7 @@ class Usuarios
     /**
      * Set nmWhatsapp
      *
-     * @param integer $nmWhatsapp
+     * @param float $nmWhatsapp
      *
      * @return Usuarios
      */
@@ -143,7 +143,7 @@ class Usuarios
     /**
      * Get nmWhatsapp
      *
-     * @return integer
+     * @return float
      */
     public function getNmWhatsapp()
     {
@@ -177,7 +177,7 @@ class Usuarios
     /**
      * Set dataCriacao
      *
-     * @param string $dataCriacao
+     * @param \DateTime $dataCriacao
      *
      * @return Usuarios
      */
@@ -191,7 +191,7 @@ class Usuarios
     /**
      * Get dataCriacao
      *
-     * @return string
+     * @return \DateTime
      */
     public function getDataCriacao()
     {

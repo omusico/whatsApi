@@ -29,6 +29,13 @@ class Atendimentos
     private $protocoloAtendimento;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="nmr_contato", type="string", length=13, nullable=false)
+     */
+    private $nmrContato;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="data_atendimento", type="datetime", nullable=false)
@@ -89,6 +96,30 @@ class Atendimentos
     public function getProtocoloAtendimento()
     {
         return $this->protocoloAtendimento;
+    }
+
+    /**
+     * Set nmrContato
+     *
+     * @param string $nmrContato
+     *
+     * @return Atendimentos
+     */
+    public function setNmrContato($nmrContato)
+    {
+        $this->nmrContato = $nmrContato;
+
+        return $this;
+    }
+
+    /**
+     * Get nmrContato
+     *
+     * @return string
+     */
+    public function getNmrContato()
+    {
+        return $this->nmrContato;
     }
 
     /**

@@ -24,16 +24,16 @@ class ConversasAtendimento
     /**
      * @var string
      *
-     * @ORM\Column(name="nome_contato", type="string", length=45, nullable=true)
+     * @ORM\Column(name="nmr_enviado", type="string", length=13, nullable=false)
      */
-    private $nomeContato;
+    private $nmrEnviado;
 
     /**
-     * @var integer
+     * @var string
      *
-     * @ORM\Column(name="nmr_contato", type="integer", nullable=false)
+     * @ORM\Column(name="nmr_recebido", type="string", length=13, nullable=false)
      */
-    private $nmrContato;
+    private $nmrRecebido;
 
     /**
      * @var string
