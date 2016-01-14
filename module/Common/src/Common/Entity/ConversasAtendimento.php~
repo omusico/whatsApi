@@ -38,7 +38,7 @@ class ConversasAtendimento
     /**
      * @var string
      *
-     * @ORM\Column(name="mensagem", type="text", length=65535, nullable=false)
+     * @ORM\Column(name="mensagem", type="text", length=-1, nullable=false)
      */
     private $mensagem;
 
@@ -50,22 +50,16 @@ class ConversasAtendimento
     private $dataConversaAtendimento = 'CURRENT_TIMESTAMP';
 
     /**
-     * @var \Common\Entity\Atendimentos
+     * @var integer
      *
-     * @ORM\ManyToOne(targetEntity="Common\Entity\Atendimentos")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_atendimento_conversas", referencedColumnName="id_atendimentos")
-     * })
+     * @ORM\Column(name="id_atendimento_conversas", type="integer", nullable=false)
      */
     private $idAtendimentoConversas;
 
     /**
-     * @var \Common\Entity\StatusConversas
+     * @var integer
      *
-     * @ORM\ManyToOne(targetEntity="Common\Entity\StatusConversas")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_status_conversas", referencedColumnName="id_status_conversas")
-     * })
+     * @ORM\Column(name="id_status_conversas", type="integer", nullable=false)
      */
     private $idStatusConversas;
 

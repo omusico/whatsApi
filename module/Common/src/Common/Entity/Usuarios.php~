@@ -36,35 +36,32 @@ class Usuarios
     private $senhaUsuario;
 
     /**
-     * @var float
+     * @var string
      *
-     * @ORM\Column(name="nm_whatsapp", type="float", precision=10, scale=0, nullable=false)
+     * @ORM\Column(name="nm_whatsapp", type="string", length=13, nullable=false)
      */
     private $nmWhatsapp;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="senha_whatsap", type="string", length=12, nullable=false)
+     * @ORM\Column(name="senha_whatsap", type="string", length=45, nullable=false)
      */
     private $senhaWhatsap;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id_status_usuarios", type="integer", nullable=false)
+     */
+    private $idStatusUsuarios;
 
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="data_criacao", type="datetime", nullable=true)
      */
-    private $dataCriacao = 'CURRENT_TIMESTAMP';
-
-    /**
-     * @var \Common\Entity\StatusUsuarios
-     *
-     * @ORM\ManyToOne(targetEntity="Common\Entity\StatusUsuarios")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_status_usuarios", referencedColumnName="id_status_usuarios")
-     * })
-     */
-    private $idStatusUsuarios;
+    private $dataCriacao;
 
 
 }

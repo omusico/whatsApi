@@ -36,35 +36,32 @@ class Usuarios
     private $senhaUsuario;
 
     /**
-     * @var float
+     * @var string
      *
-     * @ORM\Column(name="nm_whatsapp", type="float", precision=10, scale=0, nullable=false)
+     * @ORM\Column(name="nm_whatsapp", type="string", length=13, nullable=false)
      */
     private $nmWhatsapp;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="senha_whatsap", type="string", length=12, nullable=false)
+     * @ORM\Column(name="senha_whatsap", type="string", length=45, nullable=false)
      */
     private $senhaWhatsap;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id_status_usuarios", type="integer", nullable=false)
+     */
+    private $idStatusUsuarios;
 
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="data_criacao", type="datetime", nullable=true)
      */
-    private $dataCriacao = 'CURRENT_TIMESTAMP';
-
-    /**
-     * @var \Common\Entity\StatusUsuarios
-     *
-     * @ORM\ManyToOne(targetEntity="Common\Entity\StatusUsuarios")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_status_usuarios", referencedColumnName="id_status_usuarios")
-     * })
-     */
-    private $idStatusUsuarios;
+    private $dataCriacao;
 
 
 
@@ -129,7 +126,7 @@ class Usuarios
     /**
      * Set nmWhatsapp
      *
-     * @param float $nmWhatsapp
+     * @param string $nmWhatsapp
      *
      * @return Usuarios
      */
@@ -143,7 +140,7 @@ class Usuarios
     /**
      * Get nmWhatsapp
      *
-     * @return float
+     * @return string
      */
     public function getNmWhatsapp()
     {
@@ -175,6 +172,30 @@ class Usuarios
     }
 
     /**
+     * Set idStatusUsuarios
+     *
+     * @param integer $idStatusUsuarios
+     *
+     * @return Usuarios
+     */
+    public function setIdStatusUsuarios($idStatusUsuarios)
+    {
+        $this->idStatusUsuarios = $idStatusUsuarios;
+
+        return $this;
+    }
+
+    /**
+     * Get idStatusUsuarios
+     *
+     * @return integer
+     */
+    public function getIdStatusUsuarios()
+    {
+        return $this->idStatusUsuarios;
+    }
+
+    /**
      * Set dataCriacao
      *
      * @param \DateTime $dataCriacao
@@ -196,29 +217,5 @@ class Usuarios
     public function getDataCriacao()
     {
         return $this->dataCriacao;
-    }
-
-    /**
-     * Set idStatusUsuarios
-     *
-     * @param \Common\Entity\StatusUsuarios $idStatusUsuarios
-     *
-     * @return Usuarios
-     */
-    public function setIdStatusUsuarios(\Common\Entity\StatusUsuarios $idStatusUsuarios = null)
-    {
-        $this->idStatusUsuarios = $idStatusUsuarios;
-
-        return $this;
-    }
-
-    /**
-     * Get idStatusUsuarios
-     *
-     * @return \Common\Entity\StatusUsuarios
-     */
-    public function getIdStatusUsuarios()
-    {
-        return $this->idStatusUsuarios;
     }
 }

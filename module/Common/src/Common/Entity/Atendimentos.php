@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Atendimentos
  *
- * @ORM\Table(name="atendimentos", uniqueConstraints={@ORM\UniqueConstraint(name="protocolo_atendimento_UNIQUE", columns={"protocolo_atendimento"})}, indexes={@ORM\Index(name="fk_atendimentos_usuarios_idx", columns={"id_usuario_atendimento"}), @ORM\Index(name="fk_atendimentos_status_atendimentos1_idx", columns={"Id_status_atendimentos"})})
+ * @ORM\Table(name="atendimentos", uniqueConstraints={@ORM\UniqueConstraint(name="atendimentos$protocolo_atendimento_UNIQUE", columns={"protocolo_atendimento"})}, indexes={@ORM\Index(name="fk_atendimentos_status_atendimentos1_idx", columns={"Id_status_atendimentos"}), @ORM\Index(name="fk_atendimentos_usuarios_idx", columns={"id_usuario_atendimento"})})
  * @ORM\Entity
  */
 class Atendimentos
@@ -36,31 +36,25 @@ class Atendimentos
     private $nmrContato;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="id_usuario_atendimento", type="integer", nullable=false)
+     */
+    private $idUsuarioAtendimento;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="Id_status_atendimentos", type="integer", nullable=false)
+     */
+    private $idStatusAtendimentos;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="data_atendimento", type="datetime", nullable=false)
      */
     private $dataAtendimento = 'CURRENT_TIMESTAMP';
-
-    /**
-     * @var \Common\Entity\StatusAtendimentos
-     *
-     * @ORM\ManyToOne(targetEntity="Common\Entity\StatusAtendimentos")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="Id_status_atendimentos", referencedColumnName="id_status_atendimentos")
-     * })
-     */
-    private $idStatusAtendimentos;
-
-    /**
-     * @var \Common\Entity\Usuarios
-     *
-     * @ORM\ManyToOne(targetEntity="Common\Entity\Usuarios")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_usuario_atendimento", referencedColumnName="id_usuarios")
-     * })
-     */
-    private $idUsuarioAtendimento;
 
 
 
@@ -123,6 +117,54 @@ class Atendimentos
     }
 
     /**
+     * Set idUsuarioAtendimento
+     *
+     * @param integer $idUsuarioAtendimento
+     *
+     * @return Atendimentos
+     */
+    public function setIdUsuarioAtendimento($idUsuarioAtendimento)
+    {
+        $this->idUsuarioAtendimento = $idUsuarioAtendimento;
+
+        return $this;
+    }
+
+    /**
+     * Get idUsuarioAtendimento
+     *
+     * @return integer
+     */
+    public function getIdUsuarioAtendimento()
+    {
+        return $this->idUsuarioAtendimento;
+    }
+
+    /**
+     * Set idStatusAtendimentos
+     *
+     * @param integer $idStatusAtendimentos
+     *
+     * @return Atendimentos
+     */
+    public function setIdStatusAtendimentos($idStatusAtendimentos)
+    {
+        $this->idStatusAtendimentos = $idStatusAtendimentos;
+
+        return $this;
+    }
+
+    /**
+     * Get idStatusAtendimentos
+     *
+     * @return integer
+     */
+    public function getIdStatusAtendimentos()
+    {
+        return $this->idStatusAtendimentos;
+    }
+
+    /**
      * Set dataAtendimento
      *
      * @param \DateTime $dataAtendimento
@@ -144,53 +186,5 @@ class Atendimentos
     public function getDataAtendimento()
     {
         return $this->dataAtendimento;
-    }
-
-    /**
-     * Set idStatusAtendimentos
-     *
-     * @param \Common\Entity\StatusAtendimentos $idStatusAtendimentos
-     *
-     * @return Atendimentos
-     */
-    public function setIdStatusAtendimentos(\Common\Entity\StatusAtendimentos $idStatusAtendimentos = null)
-    {
-        $this->idStatusAtendimentos = $idStatusAtendimentos;
-
-        return $this;
-    }
-
-    /**
-     * Get idStatusAtendimentos
-     *
-     * @return \Common\Entity\StatusAtendimentos
-     */
-    public function getIdStatusAtendimentos()
-    {
-        return $this->idStatusAtendimentos;
-    }
-
-    /**
-     * Set idUsuarioAtendimento
-     *
-     * @param \Common\Entity\Usuarios $idUsuarioAtendimento
-     *
-     * @return Atendimentos
-     */
-    public function setIdUsuarioAtendimento(\Common\Entity\Usuarios $idUsuarioAtendimento = null)
-    {
-        $this->idUsuarioAtendimento = $idUsuarioAtendimento;
-
-        return $this;
-    }
-
-    /**
-     * Get idUsuarioAtendimento
-     *
-     * @return \Common\Entity\Usuarios
-     */
-    public function getIdUsuarioAtendimento()
-    {
-        return $this->idUsuarioAtendimento;
     }
 }

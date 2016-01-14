@@ -79,6 +79,8 @@ class IndexController extends AbstractActionController
 	}
 	
 	public function configureNumberAction(){
+	    
+	    
 		$username 	= $this->params()->fromQuery('username',null);
 		$nickname 	= $this->params()->fromQuery('nickname',null);
 		$request  	= $this->getRequest();

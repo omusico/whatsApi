@@ -29,12 +29,9 @@ class AnexosObservacoesAtendimentos
     private $nomeAnexo;
 
     /**
-     * @var \Common\Entity\ObservacoesAtendimentos
+     * @var integer
      *
-     * @ORM\ManyToOne(targetEntity="Common\Entity\ObservacoesAtendimentos")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_observacao_atendimento", referencedColumnName="id_observacoes_atendimento")
-     * })
+     * @ORM\Column(name="id_observacao_atendimento", type="integer", nullable=false)
      */
     private $idObservacaoAtendimento;
 
@@ -77,11 +74,11 @@ class AnexosObservacoesAtendimentos
     /**
      * Set idObservacaoAtendimento
      *
-     * @param \Common\Entity\ObservacoesAtendimentos $idObservacaoAtendimento
+     * @param integer $idObservacaoAtendimento
      *
      * @return AnexosObservacoesAtendimentos
      */
-    public function setIdObservacaoAtendimento(\Common\Entity\ObservacoesAtendimentos $idObservacaoAtendimento = null)
+    public function setIdObservacaoAtendimento($idObservacaoAtendimento)
     {
         $this->idObservacaoAtendimento = $idObservacaoAtendimento;
 
@@ -91,7 +88,7 @@ class AnexosObservacoesAtendimentos
     /**
      * Get idObservacaoAtendimento
      *
-     * @return \Common\Entity\ObservacoesAtendimentos
+     * @return integer
      */
     public function getIdObservacaoAtendimento()
     {
