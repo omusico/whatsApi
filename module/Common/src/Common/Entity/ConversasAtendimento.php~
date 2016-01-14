@@ -50,16 +50,22 @@ class ConversasAtendimento
     private $dataConversaAtendimento = 'CURRENT_TIMESTAMP';
 
     /**
-     * @var integer
+     * @var \Common\Entity\Atendimentos
      *
-     * @ORM\Column(name="id_atendimento_conversas", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Common\Entity\Atendimentos")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="id_atendimento_conversas", referencedColumnName="id_atendimentos")
+     * })
      */
     private $idAtendimentoConversas;
 
     /**
-     * @var integer
+     * @var \Common\Entity\StatusConversas
      *
-     * @ORM\Column(name="id_status_conversas", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Common\Entity\StatusConversas")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="id_status_conversas", referencedColumnName="id_status_conversas")
+     * })
      */
     private $idStatusConversas;
 

@@ -43,18 +43,21 @@ class Atendimentos
     private $idUsuarioAtendimento;
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="Id_status_atendimentos", type="integer", nullable=false)
-     */
-    private $idStatusAtendimentos;
-
-    /**
      * @var \DateTime
      *
      * @ORM\Column(name="data_atendimento", type="datetime", nullable=false)
      */
     private $dataAtendimento = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var \Common\Entity\StatusAtendimentos
+     *
+     * @ORM\ManyToOne(targetEntity="Common\Entity\StatusAtendimentos")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="Id_status_atendimentos", referencedColumnName="id_status_atendimentos")
+     * })
+     */
+    private $idStatusAtendimentos;
 
 
 
@@ -141,30 +144,6 @@ class Atendimentos
     }
 
     /**
-     * Set idStatusAtendimentos
-     *
-     * @param integer $idStatusAtendimentos
-     *
-     * @return Atendimentos
-     */
-    public function setIdStatusAtendimentos($idStatusAtendimentos)
-    {
-        $this->idStatusAtendimentos = $idStatusAtendimentos;
-
-        return $this;
-    }
-
-    /**
-     * Get idStatusAtendimentos
-     *
-     * @return integer
-     */
-    public function getIdStatusAtendimentos()
-    {
-        return $this->idStatusAtendimentos;
-    }
-
-    /**
      * Set dataAtendimento
      *
      * @param \DateTime $dataAtendimento
@@ -186,5 +165,29 @@ class Atendimentos
     public function getDataAtendimento()
     {
         return $this->dataAtendimento;
+    }
+
+    /**
+     * Set idStatusAtendimentos
+     *
+     * @param \Common\Entity\StatusAtendimentos $idStatusAtendimentos
+     *
+     * @return Atendimentos
+     */
+    public function setIdStatusAtendimentos(\Common\Entity\StatusAtendimentos $idStatusAtendimentos = null)
+    {
+        $this->idStatusAtendimentos = $idStatusAtendimentos;
+
+        return $this;
+    }
+
+    /**
+     * Get idStatusAtendimentos
+     *
+     * @return \Common\Entity\StatusAtendimentos
+     */
+    public function getIdStatusAtendimentos()
+    {
+        return $this->idStatusAtendimentos;
     }
 }

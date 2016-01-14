@@ -43,18 +43,21 @@ class Atendimentos
     private $idUsuarioAtendimento;
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="Id_status_atendimentos", type="integer", nullable=false)
-     */
-    private $idStatusAtendimentos;
-
-    /**
      * @var \DateTime
      *
      * @ORM\Column(name="data_atendimento", type="datetime", nullable=false)
      */
     private $dataAtendimento = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var \Common\Entity\StatusAtendimentos
+     *
+     * @ORM\ManyToOne(targetEntity="Common\Entity\StatusAtendimentos")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="Id_status_atendimentos", referencedColumnName="id_status_atendimentos")
+     * })
+     */
+    private $idStatusAtendimentos;
 
 
 }

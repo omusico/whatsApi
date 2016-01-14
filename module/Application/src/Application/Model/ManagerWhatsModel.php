@@ -84,6 +84,7 @@ class ManagerWhatsModel{
     
     
     public function storageServiceClient($protocolService,$nmrContato){
+        
         $result = true;
         $serviceClient = new Atendimentos();
         $serviceClient->setIdStatusAtendimentos($this->entityManager->getRepository('Common\Entity\StatusAtendimentos')->findOneBy(array('idStatusAtendimentos' => 5)));
@@ -95,12 +96,11 @@ class ManagerWhatsModel{
             $this->entityManager->persist($serviceClient);
             $this->entityManager->flush();
         }catch(\Exception $e){
-            $messageError = $e->getMessage();
-            $result = false;
+             $this->setLogTalk("Criação novo atendimento", $e->getMessage());
+             
         }
         
-        if($result == false)
-            $this->setLogTalk("Criação novo atendimento", $messageError);
+           
         
         return $serviceClient;
     }
@@ -149,6 +149,13 @@ class ManagerWhatsModel{
     }
       
     public function setLogTalk($ação,$erro){
+        if (!$this->entityManager->isOpen()) {
+            $this->entityManager = $this->entityManager->create(
+                $this->entityManager->getConnection(),
+                $this->entityManager->getConfiguration()
+            );
+        }
+        
         $log = new Logs();
         $log->setDataLogs(new \DateTime('now'));
         $log->setDescricaoLogs($erro);

@@ -50,16 +50,22 @@ class ConversasAtendimento
     private $dataConversaAtendimento = 'CURRENT_TIMESTAMP';
 
     /**
-     * @var integer
+     * @var \Common\Entity\Atendimentos
      *
-     * @ORM\Column(name="id_atendimento_conversas", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Common\Entity\Atendimentos")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="id_atendimento_conversas", referencedColumnName="id_atendimentos")
+     * })
      */
     private $idAtendimentoConversas;
 
     /**
-     * @var integer
+     * @var \Common\Entity\StatusConversas
      *
-     * @ORM\Column(name="id_status_conversas", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Common\Entity\StatusConversas")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="id_status_conversas", referencedColumnName="id_status_conversas")
+     * })
      */
     private $idStatusConversas;
 
@@ -174,11 +180,11 @@ class ConversasAtendimento
     /**
      * Set idAtendimentoConversas
      *
-     * @param integer $idAtendimentoConversas
+     * @param \Common\Entity\Atendimentos $idAtendimentoConversas
      *
      * @return ConversasAtendimento
      */
-    public function setIdAtendimentoConversas($idAtendimentoConversas)
+    public function setIdAtendimentoConversas(\Common\Entity\Atendimentos $idAtendimentoConversas = null)
     {
         $this->idAtendimentoConversas = $idAtendimentoConversas;
 
@@ -188,7 +194,7 @@ class ConversasAtendimento
     /**
      * Get idAtendimentoConversas
      *
-     * @return integer
+     * @return \Common\Entity\Atendimentos
      */
     public function getIdAtendimentoConversas()
     {
@@ -198,11 +204,11 @@ class ConversasAtendimento
     /**
      * Set idStatusConversas
      *
-     * @param integer $idStatusConversas
+     * @param \Common\Entity\StatusConversas $idStatusConversas
      *
      * @return ConversasAtendimento
      */
-    public function setIdStatusConversas($idStatusConversas)
+    public function setIdStatusConversas(\Common\Entity\StatusConversas $idStatusConversas = null)
     {
         $this->idStatusConversas = $idStatusConversas;
 
@@ -212,7 +218,7 @@ class ConversasAtendimento
     /**
      * Get idStatusConversas
      *
-     * @return integer
+     * @return \Common\Entity\StatusConversas
      */
     public function getIdStatusConversas()
     {

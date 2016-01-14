@@ -29,9 +29,12 @@ class AnexosObservacoesAtendimentos
     private $nomeAnexo;
 
     /**
-     * @var integer
+     * @var \Common\Entity\ObservacoesAtendimentos
      *
-     * @ORM\Column(name="id_observacao_atendimento", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Common\Entity\ObservacoesAtendimentos")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="id_observacao_atendimento", referencedColumnName="id_observacoes_atendimento")
+     * })
      */
     private $idObservacaoAtendimento;
 

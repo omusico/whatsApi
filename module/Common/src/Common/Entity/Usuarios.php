@@ -50,18 +50,21 @@ class Usuarios
     private $senhaWhatsap;
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="id_status_usuarios", type="integer", nullable=false)
-     */
-    private $idStatusUsuarios;
-
-    /**
      * @var \DateTime
      *
      * @ORM\Column(name="data_criacao", type="datetime", nullable=true)
      */
     private $dataCriacao;
+
+    /**
+     * @var \Common\Entity\StatusUsuarios
+     *
+     * @ORM\ManyToOne(targetEntity="Common\Entity\StatusUsuarios")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="id_status_usuarios", referencedColumnName="id_status_usuarios")
+     * })
+     */
+    private $idStatusUsuarios;
 
 
 
@@ -172,30 +175,6 @@ class Usuarios
     }
 
     /**
-     * Set idStatusUsuarios
-     *
-     * @param integer $idStatusUsuarios
-     *
-     * @return Usuarios
-     */
-    public function setIdStatusUsuarios($idStatusUsuarios)
-    {
-        $this->idStatusUsuarios = $idStatusUsuarios;
-
-        return $this;
-    }
-
-    /**
-     * Get idStatusUsuarios
-     *
-     * @return integer
-     */
-    public function getIdStatusUsuarios()
-    {
-        return $this->idStatusUsuarios;
-    }
-
-    /**
      * Set dataCriacao
      *
      * @param \DateTime $dataCriacao
@@ -217,5 +196,29 @@ class Usuarios
     public function getDataCriacao()
     {
         return $this->dataCriacao;
+    }
+
+    /**
+     * Set idStatusUsuarios
+     *
+     * @param \Common\Entity\StatusUsuarios $idStatusUsuarios
+     *
+     * @return Usuarios
+     */
+    public function setIdStatusUsuarios(\Common\Entity\StatusUsuarios $idStatusUsuarios = null)
+    {
+        $this->idStatusUsuarios = $idStatusUsuarios;
+
+        return $this;
+    }
+
+    /**
+     * Get idStatusUsuarios
+     *
+     * @return \Common\Entity\StatusUsuarios
+     */
+    public function getIdStatusUsuarios()
+    {
+        return $this->idStatusUsuarios;
     }
 }

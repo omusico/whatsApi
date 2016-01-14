@@ -50,18 +50,21 @@ class Usuarios
     private $senhaWhatsap;
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="id_status_usuarios", type="integer", nullable=false)
-     */
-    private $idStatusUsuarios;
-
-    /**
      * @var \DateTime
      *
      * @ORM\Column(name="data_criacao", type="datetime", nullable=true)
      */
     private $dataCriacao;
+
+    /**
+     * @var \Common\Entity\StatusUsuarios
+     *
+     * @ORM\ManyToOne(targetEntity="Common\Entity\StatusUsuarios")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="id_status_usuarios", referencedColumnName="id_status_usuarios")
+     * })
+     */
+    private $idStatusUsuarios;
 
 
 }

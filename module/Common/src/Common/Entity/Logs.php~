@@ -24,7 +24,7 @@ class Logs
     /**
      * @var string
      *
-     * @ORM\Column(name="descricao_logs", type="string", length=255, nullable=false)
+     * @ORM\Column(name="descricao_logs", type="text", length=16, nullable=true)
      */
     private $descricaoLogs;
 

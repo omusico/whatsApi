@@ -36,9 +36,12 @@ class ObservacoesAtendimentos
     private $data = 'CURRENT_TIMESTAMP';
 
     /**
-     * @var integer
+     * @var \Common\Entity\Atendimentos
      *
-     * @ORM\Column(name="id_atendimento_observacao", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Common\Entity\Atendimentos")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="id_atendimento_observacao", referencedColumnName="id_atendimentos")
+     * })
      */
     private $idAtendimentoObservacao;
 
@@ -105,11 +108,11 @@ class ObservacoesAtendimentos
     /**
      * Set idAtendimentoObservacao
      *
-     * @param integer $idAtendimentoObservacao
+     * @param \Common\Entity\Atendimentos $idAtendimentoObservacao
      *
      * @return ObservacoesAtendimentos
      */
-    public function setIdAtendimentoObservacao($idAtendimentoObservacao)
+    public function setIdAtendimentoObservacao(\Common\Entity\Atendimentos $idAtendimentoObservacao = null)
     {
         $this->idAtendimentoObservacao = $idAtendimentoObservacao;
 
@@ -119,7 +122,7 @@ class ObservacoesAtendimentos
     /**
      * Get idAtendimentoObservacao
      *
-     * @return integer
+     * @return \Common\Entity\Atendimentos
      */
     public function getIdAtendimentoObservacao()
     {

@@ -36,9 +36,12 @@ class ObservacoesAtendimentos
     private $data = 'CURRENT_TIMESTAMP';
 
     /**
-     * @var integer
+     * @var \Common\Entity\Atendimentos
      *
-     * @ORM\Column(name="id_atendimento_observacao", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Common\Entity\Atendimentos")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="id_atendimento_observacao", referencedColumnName="id_atendimentos")
+     * })
      */
     private $idAtendimentoObservacao;
 
