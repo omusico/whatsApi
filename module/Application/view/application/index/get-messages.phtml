@@ -19,38 +19,43 @@
     	<div class="col-lg-9 col-md-9">
         	<div class="row">
             	<div class="col-lg-8 col-md-8 col-xs-12">
-            		<div id="list-talking">
-            			<div class="panel panel-default">
-                              <div class="panel-heading">Lorem ipsum in dolor</div>
-                              <div class="panel-body">
-                                <div class="row pull-left">
-                                	<div class="col-lg-2 col-md-2">
-                                		<img src="http://lorempixel.com/320/320/city" class="img-responsive img-circle">
-                                	</div>
-                                	<div class="col-lg-10 col-md-10">
-                                		<p>Lorem ipsum dolor sit amet, nec partem verear definitionem ut. Ut facete saperet periculis sea. In duo elitr singulis. Ipsum summo animal et quo. Vim amet doming in, id doctus tacimates usu.</p>
-                                	</div>
-                                </div>
-                                	
-                                <div class="row pull-right">
-                            	  	<div class="col-lg-2 col-md-2 pull-right">
-                                		<img src="http://lorempixel.com/320/320/city" class="img-responsive img-circle">
-                                	</div>
-                                	  	<div class="col-lg-10 col-md-10">
-                                		<p>Lorem ipsum dolor sit amet, nec partem verear definitionem ut. Ut facete saperet periculis sea. In duo elitr singulis. Ipsum summo animal et quo. Vim amet doming in, id doctus tacimates usu.</p>
-                                	</div>
-                                </div>
-                              </div>
-                              <div class="panel-footer">
-                              	 <div class="input-group">
-                                      <input type="text" class="form-control" placeholder="Enviar mensagem...">
-                                      <span class="input-group-btn">
-                                        <button class="btn btn-default" type="button">Enviar</button>
-                                      </span>
-                                  </div><!-- /input-group -->
-                              </div>
-                            </div>
-            		</div>
+            		
+            		 <?php foreach ($result as $key => $values):?>
+            		 		<?php list($number, $whatsAppUrl) = explode('@',$key);?>
+                    		<div id="list-talking">
+                    			<div class="panel panel-default">
+                                      <div class="panel-heading"><?php echo $number; ?></div>
+                                      <div class="panel-body">
+                                      <?php foreach($values['messages'] as $value):?>
+                                            <div class="row pull-left" style="margin-bottom:10px">
+                                            	<div class="col-lg-2 col-md-2">
+                                            		<img src="http://lorempixel.com/320/320/city" class="img-responsive img-circle">
+                                            	</div>
+                                            	<div class="col-lg-10 col-md-10">
+                                            		<p><?php echo $value?></p>
+                                            	</div>
+                                            </div>
+                                        <?php endforeach;?>	
+                                        <div class="row pull-right">
+                                    	  	<div class="col-lg-2 col-md-2 pull-right">
+                                        		<img src="http://lorempixel.com/320/320/city" class="img-responsive img-circle">
+                                        	</div>
+                                        	  	<div class="col-lg-10 col-md-10">
+                                        		<p>Lorem ipsum dolor sit amet, nec partem verear definitionem ut. Ut facete saperet periculis sea. In duo elitr singulis. Ipsum summo animal et quo. Vim amet doming in, id doctus tacimates usu.</p>
+                                        	</div>
+                                        </div>
+                                      </div>
+                                      <div class="panel-footer">
+                                      	 <div class="input-group">
+                                              <input type="text" class="form-control" placeholder="Enviar mensagem...">
+                                              <span class="input-group-btn">
+                                                <button class="btn btn-default" type="button">Enviar</button>
+                                              </span>
+                                          </div><!-- /input-group -->
+                                      </div>
+                                    </div>
+                    		</div>
+            		<?php endforeach;?>
             		<div id="talking">
             		</div>
             	</div>
@@ -80,20 +85,21 @@
         	</div>
     	</div>
 	</div>
-    <?php foreach ($result as $key => $values):?>
-			<div class="row" style="margin-bottom: 20px">
-				<div class="col-md-8">
-					<div class="col-md-4">
-						<?php list($number, $whatsAppUrl) = explode('@',$key);?>
-						<label><?php echo $this->translate("Número")?>: <?php echo $number; ?> </label>
-						<label><?php echo $this->translate("Nickname")?>: <?php echo $values['userSend'];?></label>
-					</div>
-					<?php foreach($values['messages'] as $value):?>
-						<div class="col-md-10" style="word-break: break-word; margin-bottom: 15px;"><span><?php echo $value?></span></div>
-					<?php endforeach;?>
-				</div>
-			</div>
-    <?php endforeach;?>
-</div> 
+ </div> 
 
+<script>
+
+function sendMessage(form){
+	$.ajax({
+	    url: "<?php echo $this->url('application')?>/message/send-message-ajax",
+	    async: true,
+	    type: 'POST',
+	    data:form.serialize,
+	    success: function(result){
+	    	alert(result);
+	    }
+	});
+}
+
+</script>
     

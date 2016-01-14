@@ -81,40 +81,43 @@ class ManagerWhatsModel{
         return $return;
     }
     
-    
-    
-    public function storageServiceClient($protocolService,$nmrContato){
-        
-        $result = true;
-        $serviceClient = new Atendimentos();
-        $serviceClient->setIdStatusAtendimentos($this->entityManager->getRepository('Common\Entity\StatusAtendimentos')->findOneBy(array('idStatusAtendimentos' => 5)));
-        $serviceClient->setIdUsuarioAtendimento($this->users);
-        $serviceClient->setProtocoloAtendimento($protocolService);
-        $serviceClient->setDataAtendimento(new \DateTime('now'));
-        $serviceClient->setNmrContato($nmrContato);
-        try{
-            $this->entityManager->persist($serviceClient);
-            $this->entityManager->flush();
-        }catch(\Exception $e){
-             $this->setLogTalk("Criação novo atendimento", $e->getMessage());
-             
+    public function getMessages()
+    {
+        $result = array();
+        while ($this->managerWhats->pollMessage()){
+            $data = $this->managerWhats->getMessages();
+           foreach ($data as $message) {
+                $userSendMessage = $message->getAttribute('from');
+                list($number, $whatsAppUrl) = explode('@',$userSendMessage);
+                $result[$userSendMessage]['userSend'] = $message->getAttribute('notify');
+                
+                if($message->getChild('media')){
+                    $mess = $message->getChild("media");
+                    //$mess = $message->getChild("enc");
+                    $result[$userSendMessage]['messages'][] = $mess->getAttribute('url');
+                    $this->storageMessage($this->users->getNmWhatsapp(),$number, $mess->getAttribute('url'));
+                }else{
+                    $mess = $message->getChild("body");
+                    //$mess = $message->getChild("enc");
+                    $result[$userSendMessage]['messages'][] = $mess->getData();
+                    $this->storageMessage($this->users->getNmWhatsapp(),$number, $mess->getData());
+                }
+            }
         }
-        
-           
-        
-        return $serviceClient;
+    
+        return $result;
     }
     
     public function storageMessage($to, $from, $message , $isOperator = false){
-        
+    
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('atendimento')
-            ->from('Common\Entity\Atendimentos','atendimento')
-            ->where('atendimento.nmrContato = :to OR atendimento.nmrContato = :from AND atendimento.idStatusAtendimentos IN (5,6)')
-            ->setParameters(array('to' => $to, 'from' => $from));
-        
+        ->from('Common\Entity\Atendimentos','atendimento')
+        ->where('atendimento.nmrContato = :to OR atendimento.nmrContato = :from AND atendimento.idStatusAtendimentos IN (5,6)')
+        ->setParameters(array('to' => $to, 'from' => $from));
+    
         $serviceClient = $qb->getQuery()->getArrayResult();
-        
+    
         if(empty($serviceClient)){
             $date               = date('Ymdhis');
             $protocolService    = md5($from.$date);
@@ -122,31 +125,54 @@ class ManagerWhatsModel{
         }else{
             $serviceClient      = $this->entityManager->getRepository('Common\Entity\Atendimentos')->findOneBy(array('idAtendimentos'=>$serviceClient[0]['idAtendimentos']));
         }
+         
+        if($serviceClient){
+            $talk = new ConversasAtendimento();
+            $talk->setDataConversaAtendimento(new \DateTime('now'));
+            $talk->setNmrEnviado($from);
+            $talk->setNmrRecebido($to);
+            $talk->setMensagem($message);
+            $talk->setIdAtendimentoConversas($serviceClient);
         
-        $talk = new ConversasAtendimento();
-        $talk->setDataConversaAtendimento(new \DateTime('now'));
-        $talk->setNmrEnviado($from);
-        $talk->setNmrRecebido($to);
-        $talk->setMensagem($message);
-        $talk->setIdAtendimentoConversas($serviceClient);
+            if($isOperator)
+                $talk->setIdStatusConversas($this->entityManager->getRepository('Common\Entity\StatusConversas')->findOneBy(array('idStatusConversas'=> 3)));
+            else
+                $talk->setIdStatusConversas($this->entityManager->getRepository('Common\Entity\StatusConversas')->findOneBy(array('idStatusConversas'=> 4)));
         
-        if($isOperator)
-            $talk->setIdStatusConversas($this->entityManager->getRepository('Common\Entity\StatusConversas')->findOneBy(array('idStatusConversas'=> 3)));
-        else
-            $talk->setIdStatusConversas($this->entityManager->getRepository('Common\Entity\StatusConversas')->findOneBy(array('idStatusConversas'=> 4)));
-            
-        try{
-            $this->entityManager->persist($talk);
-            $this->entityManager->flush();
-           
-        }catch(\Exception $e){
-            $this->setLogTalk('Gravar conversa:'.$from, $e->getMessage());
+            //try{
+                $this->entityManager->persist($talk);
+                $this->entityManager->flush();
+                 
+            //}catch(\Exception $e){
+              //  $this->setLogTalk('Gravar conversa:'.$from, $e->getMessage());
+               // return false;
+            //}
+        
+            return true;
+        }else{
             return false;
         }
-        
-        return true;
-        
     }
+    
+    public function storageServiceClient($protocolService,$nmrContato){
+        
+        $serviceClient = new Atendimentos();
+        $serviceClient->setIdStatusAtendimentos($this->entityManager->getRepository('Common\Entity\StatusAtendimentos')->findOneBy(array('idStatusAtendimentos' => 5)));
+        $serviceClient->setIdUsuarioAtendimento($this->users);
+        $serviceClient->setProtocoloAtendimento($protocolService);
+        $serviceClient->setDataAtendimento(new \DateTime('now'));
+        $serviceClient->setNmrContato($nmrContato);
+        try{
+         		$this->entityManager->persist($serviceClient);
+        		$this->entityManager->flush();
+        }catch(\Exception $e){
+           $this->setLogTalk("Criação novo atendimento", $e->getMessage());
+         	  return false;
+        }
+        
+        return $serviceClient;
+    }
+    
       
     public function setLogTalk($ação,$erro){
         if (!$this->entityManager->isOpen()) {
@@ -161,35 +187,13 @@ class ManagerWhatsModel{
         $log->setDescricaoLogs($erro);
         $log->setDescricaoAcaoLogs($ação);
         
-        //try{
+        try{
             $this->entityManager->persist($log);
             $this->entityManager->flush();
-        //}catch(\Exception $e){
-        //    throw new \Exception("Não foi possível guardar as mensagens recebidas:".$e->getMessage());
-       // }
+        }catch(\Exception $e){
+           throw new \Exception("Não foi possível guardar as mensagens recebidas:".$e->getMessage());
+       }
         
-    }
-    
-    /**
-     * return array();
-     * **/
-    public function getMessages()
-    {   
-        $result = array();
-        while ($this->managerWhats->pollMessage()){
-                $data = $this->managerWhats->getMessages();
-                foreach ($data as $message) {
-                   $mess = $message->getChild("body");
-//                    $mess = $message->getChild("enc");
-                   $userSendMessage = $message->getAttribute('from');
-                   $result[$userSendMessage]['userSend'] = $message->getAttribute('notify');
-                   $result[$userSendMessage]['messages'][] = $mess->getData();
-                   
-                   $this->storageMessage($this->users->getNmWhatsapp(),$userSendMessage, $mess->getData());
-    			}
-            }
-            
-         return $result;
     }
     
     protected function sendFiles($to,$files){

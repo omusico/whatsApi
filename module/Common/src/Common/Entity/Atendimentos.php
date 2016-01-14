@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Atendimentos
  *
- * @ORM\Table(name="atendimentos", uniqueConstraints={@ORM\UniqueConstraint(name="atendimentos$protocolo_atendimento_UNIQUE", columns={"protocolo_atendimento"})}, indexes={@ORM\Index(name="fk_atendimentos_status_atendimentos1_idx", columns={"Id_status_atendimentos"}), @ORM\Index(name="fk_atendimentos_usuarios_idx", columns={"id_usuario_atendimento"})})
+ * @ORM\Table(name="atendimentos", uniqueConstraints={@ORM\UniqueConstraint(name="atendimentos$protocolo_atendimento_UNIQUE", columns={"protocolo_atendimento"})}, indexes={@ORM\Index(name="fk_atendimentos_status_atendimentos1_idx", columns={"id_status_atendimentos"}), @ORM\Index(name="fk_atendimentos_usuarios_idx", columns={"id_usuario_atendimento"})})
  * @ORM\Entity
  */
 class Atendimentos
@@ -24,7 +24,7 @@ class Atendimentos
     /**
      * @var string
      *
-     * @ORM\Column(name="protocolo_atendimento", type="string", length=45, nullable=true)
+     * @ORM\Column(name="protocolo_atendimento", type="string", length=64, nullable=true)
      */
     private $protocoloAtendimento;
 
@@ -34,13 +34,6 @@ class Atendimentos
      * @ORM\Column(name="nmr_contato", type="string", length=13, nullable=false)
      */
     private $nmrContato;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="id_usuario_atendimento", type="integer", nullable=false)
-     */
-    private $idUsuarioAtendimento;
 
     /**
      * @var \DateTime
@@ -54,10 +47,20 @@ class Atendimentos
      *
      * @ORM\ManyToOne(targetEntity="Common\Entity\StatusAtendimentos")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="Id_status_atendimentos", referencedColumnName="id_status_atendimentos")
+     *   @ORM\JoinColumn(name="id_status_atendimentos", referencedColumnName="id_status_atendimentos")
      * })
      */
     private $idStatusAtendimentos;
+
+    /**
+     * @var \Common\Entity\Usuarios
+     *
+     * @ORM\ManyToOne(targetEntity="Common\Entity\Usuarios")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="id_usuario_atendimento", referencedColumnName="id_usuarios")
+     * })
+     */
+    private $idUsuarioAtendimento;
 
 
 
@@ -120,30 +123,6 @@ class Atendimentos
     }
 
     /**
-     * Set idUsuarioAtendimento
-     *
-     * @param integer $idUsuarioAtendimento
-     *
-     * @return Atendimentos
-     */
-    public function setIdUsuarioAtendimento($idUsuarioAtendimento)
-    {
-        $this->idUsuarioAtendimento = $idUsuarioAtendimento;
-
-        return $this;
-    }
-
-    /**
-     * Get idUsuarioAtendimento
-     *
-     * @return integer
-     */
-    public function getIdUsuarioAtendimento()
-    {
-        return $this->idUsuarioAtendimento;
-    }
-
-    /**
      * Set dataAtendimento
      *
      * @param \DateTime $dataAtendimento
@@ -189,5 +168,29 @@ class Atendimentos
     public function getIdStatusAtendimentos()
     {
         return $this->idStatusAtendimentos;
+    }
+
+    /**
+     * Set idUsuarioAtendimento
+     *
+     * @param \Common\Entity\Usuarios $idUsuarioAtendimento
+     *
+     * @return Atendimentos
+     */
+    public function setIdUsuarioAtendimento(\Common\Entity\Usuarios $idUsuarioAtendimento = null)
+    {
+        $this->idUsuarioAtendimento = $idUsuarioAtendimento;
+
+        return $this;
+    }
+
+    /**
+     * Get idUsuarioAtendimento
+     *
+     * @return \Common\Entity\Usuarios
+     */
+    public function getIdUsuarioAtendimento()
+    {
+        return $this->idUsuarioAtendimento;
     }
 }
