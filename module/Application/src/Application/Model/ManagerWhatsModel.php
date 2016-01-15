@@ -14,11 +14,11 @@ class ManagerWhatsModel{
     /**
      * @var \WhatsProt
      * */
-    private $managerWhats;
+    public $managerWhats;
     /**
      * @param string $nickname
      * */
-    private $password;
+    public $password;
     /**
      * @var MyEvents
      * */
@@ -30,13 +30,13 @@ class ManagerWhatsModel{
     /**
      * @var Usuarios
      * */
-    private $users;
+    public $users;
     
-    public function __construct($username = null,$nickname = null, $debug = false,EntityManager $entityManager,Usuarios $users = null){
-        $this->setWhatsProt($username, $nickname,$debug);
-        $this->events           = new \MyEvents($this->managerWhats);
+    public function __construct(EntityManager $entityManager,Usuarios $users = null,$debug = false){
         $this->entityManager    = $entityManager;
-        $this->users            = $this->entityManager->getRepository('Common\Entity\Usuarios')->findOneBy(array('idUsuarios' => 2));
+        $this->users            = $users;
+        $this->setWhatsProt($this->users->getNmWhatsapp(),'pv-whats',$debug);
+        $this->events           = new \MyEvents($this->managerWhats);
     }
     
     public function setWhatsProt($username = null ,$nickname = null ,$debug = false){
@@ -48,9 +48,9 @@ class ManagerWhatsModel{
         return $this->managerWhats;
     }
     
-    public function connectPassword($password){
+    public function connectPassword(){
         $this->managerWhats->connect();
-        $this->managerWhats->loginWithPassword($password);
+        $this->managerWhats->loginWithPassword($this->users->getSenhaWhatsap());
         return $this->managerWhats;
     }
     
@@ -65,7 +65,7 @@ class ManagerWhatsModel{
     }
     
     
-    public function sendMessage($to, $message,$files){
+    public function sendMessage($to, $message, $files=null){
         
         if(!empty($files))
             $return['midias'] = $this->sendFiles($to, $files);
@@ -75,7 +75,7 @@ class ManagerWhatsModel{
             $this->storageMessage($to, $this->users->getNmWhatsapp(), $message,true);
            
             
-            if(empty($return['message']))
+            if(empty($return['message']) || !isset($return))
                 $this->setLogTalk('Enviar Mensagem:'.$to, "Não foi possível enviar a mensagem para o cliente");
         }        
         return $return;
@@ -139,14 +139,13 @@ class ManagerWhatsModel{
             else
                 $talk->setIdStatusConversas($this->entityManager->getRepository('Common\Entity\StatusConversas')->findOneBy(array('idStatusConversas'=> 4)));
         
-            //try{
+            try{
                 $this->entityManager->persist($talk);
                 $this->entityManager->flush();
-                 
-            //}catch(\Exception $e){
-              //  $this->setLogTalk('Gravar conversa:'.$from, $e->getMessage());
-               // return false;
-            //}
+            }catch(\Exception $e){
+               $this->setLogTalk('Gravar conversa:'.$from, $e->getMessage());
+               return false;
+            }
         
             return true;
         }else{

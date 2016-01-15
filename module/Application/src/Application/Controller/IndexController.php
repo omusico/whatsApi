@@ -17,23 +17,48 @@ use WhatsProt;
 class IndexController extends AbstractActionController
 {
     public function indexAction()
-    {
+    {           
+        if ($user = $this->identity())
+            return $this->redirect()->toRoute('crm');
+        
        return new ViewModel();
     }
 	
-	
+    public function loginAction(){
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+                $data = $request->getPost();
+                $authService = $this->getServiceLocator()->get('Zend\Authentication\AuthenticationService');
+        
+                $adapter = $authService->getAdapter();
+                $adapter->setIdentityValue($data['login']);
+                $adapter->setCredentialValue($data['password']);
+                $authResult = $authService->authenticate();
+        
+                if ($authResult->isValid()) {
+                    return $this->redirect()->toRoute('crm');
+                } else {
+                   $this->flashmessenger()->addErrorMessage('Senha ou email inválidos');
+                   return $this->redirect()->toRoute('application');
+                }
+        }
+        return new ViewModel();
+    }
+    public function logoutAction()
+    {
+        $authService = $this->getServiceLocator()->get('Zend\Authentication\AuthenticationService');
+        $authService->clearIdentity();
+    
+        $this->flashmessenger()->addSuccessMessage("No momento você não está logado!");
+        return $this->redirect()->toRoute('application');
+    }
 	public function getMessagesAction(){
 		
         $debug = false;
         $result   = array();
-        $username = '5511941872988';                      // Telephone number including the country code without '+' or '00'.
-        $nickname = 'pvwhats';
-        $password = "OfDOGOZe4+fmIe3RL+24iprtQk0=";     // Use registerTool.php or exampleRegister.php to obtain your password
-          
-        $whatsManagerModel = new ManagerWhatsModel($username,$nickname,$debug,$this->getEntityManager());
-        $whatsManagerModel->connectPassword($password);
+        $whatsManagerModel = new ManagerWhatsModel($this->getEntityManager(),$this->identity(),$debug);
+        $whatsManagerModel->connectPassword();
         $result = $whatsManagerModel->getMessages();
-
         
         return new ViewModel(array('result' => $result));
 	}
@@ -41,23 +66,19 @@ class IndexController extends AbstractActionController
 	public function sendMessageAction(){
             $request  = $this->getRequest();
             $debug = false;
-            $username = '5511941872988';                      // Telephone number including the country code without '+' or '00'.
-            $nickname = 'pvwhats';
-            $password = "OfDOGOZe4+fmIe3RL+24iprtQk0=";     // Use registerTool.php or exampleRegister.php to obtain your password
-            
-            $whatsManagerModel = new ManagerWhatsModel($username,$nickname,$debug,$this->getEntityManager());
-            $whatsManagerModel->connectPassword($password);
+            $whatsManagerModel = new ManagerWhatsModel($this->getEntityManager(),$this->identity(),$debug);
+            $whatsManagerModel->connectPassword();
             
             $result   = false;
             if($request->isPost()){ 
                 $data   = $request->getPost();
                 $files  = $request->getFiles();
                 $result = $whatsManagerModel->sendMessage($data['to'], $data['message'], $files) ;
-                
             }
             return new ViewModel(array('result' => $result));
 	}
-	// return bollean
+	
+	
 	public function registerNumberAction(){
 		
 	    $request = $this->getRequest();
@@ -91,12 +112,11 @@ class IndexController extends AbstractActionController
 		    
 		    
 			$data = $request->getPost();
+			$username = $data['username'];  
+			$nickname = $data['nickname'];
 			
-//             $username = $data['username'];  
-// 			$nickname = $data['nickname'];
-			
-			$username = '5511941872988';
-			$nickname = 'pvwhats';    
+// 			$username = '5511941872988';
+// 			$nickname = 'pvwhats';    
 			    
 			$codeRegister = $data['code'];
 			$w = new WhatsProt($username, $nickname, $debug);

@@ -72,13 +72,11 @@ return array(
         'authentication' => array(
             'orm_default' => array(
                 'object_manager' => 'Doctrine\ORM\EntityManager',
-                'identity_class' => 'Common\Entity\Users',
-                'identity_property' => 'loginEmail',
-                'credential_property' => 'password',
+                'identity_class' => 'Common\Entity\Usuarios',
+                'identity_property' => 'nomeUsuario',
+                'credential_property' => 'senhaUsuario',
                 'credential_callable' => function ($user, $pass) {
-                    $bcrypt = new \Zend\Crypt\Password\Bcrypt();
-                    $bcrypt->setSalt('wjQH7OLf5g9j3Kqq');
-                    return $user->getFlgActiveStatus()->getUsersFlgActive() == '1' && $bcrypt->verify($pass, $user->getPassword());
+                    return $user->getIdStatusUsuarios()->getIdStatusUsuarios() == 4 && $user->getSenhaUsuario() == $pass;
                 }
             )
         )

@@ -52,6 +52,28 @@ return array(
                     ),
                 ),
             ),
+            'message' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/message[/:action[/:id]]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Message',
+                        'action' => 'index',
+                        'id' => 0,
+                    )
+                )
+            ),
+            'crm' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/crm[/:action[/:id]]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Index',
+                        'action' => 'get-messages',
+                        'id' => 0,
+                    )
+                )
+            ),
         ),
     ),
     'service_manager' => array(
@@ -75,7 +97,8 @@ return array(
     ),
     'controllers' => array(
         'invokables' => array(
-            'Application\Controller\Index' => 'Application\Controller\IndexController'
+            'Application\Controller\Index' => 'Application\Controller\IndexController',
+            'Application\Controller\Message' => 'Application\Controller\MessageController'
         ),
     ),
     'view_manager' => array(
@@ -92,6 +115,9 @@ return array(
         ),
         'template_path_stack' => array(
             __DIR__ . '/../view',
+        ),
+        'strategies' => array(
+            'ViewJsonStrategy',
         ),
     ),
     // Placeholder for console routes

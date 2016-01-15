@@ -1,62 +1,13 @@
 <div class="container">
 	<div style="margin-top: 10px;">
     	<div class="col-lg-3 col-md-3 col-xs-12">
-    		<div class="list-group">
-                      <?php for ($i=0;$i< 5; $i++):?>
-                          <a href="#" class="list-group-item">
-                          	<div class="row">
-                              	<div class="col-md-4">
-                              		<img src="http://lorempixel.com/320/320/city/" class="img-responsive img-circle">
-                              	</div>
-                              	<div class="col-md-8">
-                              		<label>Lorem ipsum</label>
-                              	</div>
-                          	</div>
-                      	  </a>
-                  	  <?php endfor;?>
+    		<div class="list-group" id="calls">
             </div>
     	</div>
     	<div class="col-lg-9 col-md-9">
         	<div class="row">
             	<div class="col-lg-8 col-md-8 col-xs-12">
-            		
-            		 <?php foreach ($result as $key => $values):?>
-            		 		<?php list($number, $whatsAppUrl) = explode('@',$key);?>
-                    		<div id="list-talking">
-                    			<div class="panel panel-default">
-                                      <div class="panel-heading"><?php echo $number; ?></div>
-                                      <div class="panel-body">
-                                      <?php foreach($values['messages'] as $value):?>
-                                            <div class="row pull-left" style="margin-bottom:10px">
-                                            	<div class="col-lg-2 col-md-2">
-                                            		<img src="http://lorempixel.com/320/320/city" class="img-responsive img-circle">
-                                            	</div>
-                                            	<div class="col-lg-10 col-md-10">
-                                            		<p><?php echo $value?></p>
-                                            	</div>
-                                            </div>
-                                        <?php endforeach;?>	
-                                        <div class="row pull-right">
-                                    	  	<div class="col-lg-2 col-md-2 pull-right">
-                                        		<img src="http://lorempixel.com/320/320/city" class="img-responsive img-circle">
-                                        	</div>
-                                        	  	<div class="col-lg-10 col-md-10">
-                                        		<p>Lorem ipsum dolor sit amet, nec partem verear definitionem ut. Ut facete saperet periculis sea. In duo elitr singulis. Ipsum summo animal et quo. Vim amet doming in, id doctus tacimates usu.</p>
-                                        	</div>
-                                        </div>
-                                      </div>
-                                      <div class="panel-footer">
-                                      	 <div class="input-group">
-                                              <input type="text" class="form-control" placeholder="Enviar mensagem...">
-                                              <span class="input-group-btn">
-                                                <button class="btn btn-default" type="button">Enviar</button>
-                                              </span>
-                                          </div><!-- /input-group -->
-                                      </div>
-                                    </div>
-                    		</div>
-            		<?php endforeach;?>
-            		<div id="talking">
+            		<div id="messages">
             		</div>
             	</div>
             	<div class="col-lg-4 col-md-4 col-xs-12">
@@ -90,16 +41,59 @@
 <script>
 
 function sendMessage(form){
+	var id = form.attr('id');
 	$.ajax({
-	    url: "<?php echo $this->url('application')?>/message/send-message-ajax",
+	    url: "<?php echo $this->url('message',array('action'=>'send-message-ajax'))?>",
 	    async: true,
 	    type: 'POST',
-	    data:form.serialize,
+	    data:form.serialize(),
 	    success: function(result){
-	    	alert(result);
+	    	$('#'+id+' input[name="message"]').val('');
+	    	showMessages($('#messages').data('call'));
+	    }
+	});
+	
+}
+
+function getCalls(){
+	$.ajax({
+		url: "<?php echo $this->url('message',array('action'=>'get-calls-ajax'))?>",
+	    async: true,
+	    type: 'POST',
+	    success: function(result){
+	    	$('#calls').html(result);
 	    }
 	});
 }
+
+getCalls();
+
+function showMessages(idCall){
+	$('#messages').data('call',idCall);
+	$.ajax({
+		url: "<?php echo $this->url('message',array('action'=>'messages-call-ajax'))?>",
+	    async: true,
+	    type: 'POST',
+	    data:'idCall='+idCall,
+	    success: function(result){
+	    	$('#messages').html(result);
+	    }
+	});
+}
+
+function loadAllMessages(){
+	$.ajax({
+		url: "<?php echo $this->url('message',array('action'=>'load-messages-ajax'))?>",
+	    async: true,
+	    type: 'POST',
+	    success: function(data){
+	    	console.log(data);
+	    	setTimeout("loadAllMessages();", 30000);
+	    }
+	});
+}
+loadAllMessages();
+
 
 </script>
     
