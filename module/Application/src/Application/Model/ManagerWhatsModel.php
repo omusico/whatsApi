@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManager;
 use Common\Entity\Logs;
 use Common\Entity\Atendimentos;
 use Common\Entity\Usuarios;
+use Common\Entity\ObservacoesAtendimentos;
 class ManagerWhatsModel{
     
     /**
@@ -81,6 +82,24 @@ class ManagerWhatsModel{
         return $return;
     }
     
+    public function sendObs($obsText,$idCall){
+        $call = $this->entityManager->getRepository('Common\Entity\Atendimentos')->findOneBy(array('idAtendimentos' => $idCall));
+        
+        $obs = new ObservacoesAtendimentos();
+        $obs->setIdAtendimentoObservacao($call);
+        $obs->setObservacoes($obsText);
+        $obs->setData(new \DateTime('now'));
+        try{
+            $this->entityManager->persist($obs);
+            $this->entityManager->flush();
+        }catch (\Exception $e){
+            $this->setLogTalk("Gravar Observação", $e->getMessage());
+            return false;
+        }
+        
+        return $obs;        
+    }
+    
     public function getMessages()
     {
         $result = array();
@@ -95,7 +114,7 @@ class ManagerWhatsModel{
                     $mess = $message->getChild("media");
                     //$mess = $message->getChild("enc");
                     $result[$userSendMessage]['messages'][] = $mess->getAttribute('url');
-                    $this->storageMessage($this->users->getNmWhatsapp(),$number, $mess->getAttribute('url'));
+                    $this->storageMessage($this->users->getNmWhatsapp(),$number, $mess->getAttribute('url'),false,true);
                 }else{
                     $mess = $message->getChild("body");
                     //$mess = $message->getChild("enc");
@@ -108,7 +127,7 @@ class ManagerWhatsModel{
         return $result;
     }
     
-    public function storageMessage($to, $from, $message , $isOperator = false){
+    public function storageMessage($to, $from, $message , $isOperator = false, $isImage = false){
     
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('atendimento')
@@ -138,7 +157,12 @@ class ManagerWhatsModel{
                 $talk->setIdStatusConversas($this->entityManager->getRepository('Common\Entity\StatusConversas')->findOneBy(array('idStatusConversas'=> 3)));
             else
                 $talk->setIdStatusConversas($this->entityManager->getRepository('Common\Entity\StatusConversas')->findOneBy(array('idStatusConversas'=> 4)));
-        
+            
+            if($isImage)
+                $talk->setImagem(1);
+            else 
+                $talk->setImagem(0);
+                
             try{
                 $this->entityManager->persist($talk);
                 $this->entityManager->flush();
@@ -146,7 +170,6 @@ class ManagerWhatsModel{
                $this->setLogTalk('Gravar conversa:'.$from, $e->getMessage());
                return false;
             }
-        
             return true;
         }else{
             return false;

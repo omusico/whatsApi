@@ -35,3 +35,16 @@ div.container a.brand {
     margin-left: 0;
     padding: 8px 20px 12px 40px;
 }
+
+.loading{
+    position: relative;
+    margin: 10% auto;
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+    border: solid 5px rgba(255, 255, 255, 0.8);
+    border-top-color: #00B9DD;
+    -moz-animation: circleLoad 0.5s infinite linear;
+    -webkit-animation: circleLoad 0.5s infinite linear;
+    animation: circleLoad 0.5s infinite linear;
+}

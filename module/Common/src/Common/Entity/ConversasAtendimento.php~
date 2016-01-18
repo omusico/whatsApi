@@ -50,6 +50,13 @@ class ConversasAtendimento
     private $dataConversaAtendimento = 'CURRENT_TIMESTAMP';
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="imagem", type="integer", nullable=false)
+     */
+    private $imagem = '0';
+
+    /**
      * @var \Common\Entity\Atendimentos
      *
      * @ORM\ManyToOne(targetEntity="Common\Entity\Atendimentos")

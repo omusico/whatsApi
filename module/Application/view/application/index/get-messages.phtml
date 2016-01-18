@@ -2,6 +2,9 @@
 	<div style="margin-top: 10px;">
     	<div class="col-lg-3 col-md-3 col-xs-12">
     		<div class="list-group" id="calls">
+    			<div id="loading-calls" class="text-center" style="width: 35px; margin-left:100px;">
+    				<img src="<?php echo $this->basePath('img/loading_apple.gif');?>" class="img-responsive">
+    			</div>
             </div>
     	</div>
     	<div class="col-lg-9 col-md-9">
@@ -10,26 +13,42 @@
             		<div id="messages">
             		</div>
             	</div>
-            	<div class="col-lg-4 col-md-4 col-xs-12">
+            	<div class="col-lg-4 col-md-4 col-xs-12 hidden" id="panel-calls">
             		<div class="panel panel-default">
                       <div class="panel-heading">
                         <h3 class="panel-title">Painel de Atendimento</h3>
                       </div>
                       <div class="panel-body">
-                      	<p><a href="javascript:void(0)">Iniciar atendimento</a></p>
-                      	<p><a href="javascript:void(0)">Enviar número do protocolo</a></p>
-                      	<p><a href="javascript:void(0)">Adicionar Observação</a></p>
-                      	<form id="post-obs">
-                      		<textarea class="form-control"></textarea>
-                      		<button class="btn btn-xs btn-primary pull-right">Adicionar</button>
-                      	</form>
+                      	<p><a href="javascript:void(0)" onclick="getNmrProtocol($('.id_calls').val());">Enviar número do protocolo</a></p>
+                      	<p><a href="javascript:void(0)" onclick="$('#obs-div').fadeIn('slow').removeClass('hidden'); ">Adicionar Observação</a></p>
+                      	<div id="obs-div" class="hidden" style="margin-bottom: 30px;">
+                          	<form id="post-obs">
+                          		<textarea class="form-control" id="obs" name="obs"></textarea>
+                          		<input type="hidden" name="idCall" class="id_calls">
+                          		<button type="button" class="btn btn-xs btn-primary pull-right" style="margin-top: 10px;" onclick="sendObs($('#post-obs'))">Adicionar</button>
+                          	</form>
+                      	</div>
+                      	<p><a href="javascript:void(0)" onclick="$('#anexo-div').fadeIn('slow').removeClass('hidden');">Adicionar Anexo</a></p>
+                      	<div id="anexo-div" class="hidden">
+                          	<form id="post-anexo">
+                          		<input type="file" class="form-control">
+                          		<input type="hidden" name="id_calls" class="id_calls">
+                          		<button type="button" class="btn btn-xs btn-primary pull-right" style="margin-top: 10px;">Adicionar</button>
+                          	</form>
+                      	</div>
                       	<p>&nbsp;</p>
-                      	<p><a href="javascript:void(0)">Adicionar Anexo</a></p>
-                      	<form id="post-anexo">
-                      		<input type="file" class="form-control">
-                      		<button class="btn btn-xs btn-primary pull-right">Adicionar</button>
-                      	</form>
-                      	<p>&nbsp;</p>
+                      </div>
+                    </div>
+                    <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <h3 class="panel-title">Observações do Atendimento</h3>
+                      </div>
+                      <div class="panel-body">
+                      	<div id="obs-list">
+                      		<div style="width: 35px; margin-left:100px;">
+                				<img src="<?php echo $this->basePath('img/loading_apple.gif');?>" class="img-responsive">
+                			</div>
+                      	</div>
                       </div>
                     </div>
             	</div>
@@ -52,7 +71,20 @@ function sendMessage(form){
 	    	showMessages($('#messages').data('call'));
 	    }
 	});
-	
+}
+
+function sendObs(form){
+	$.ajax({
+	    url: "<?php echo $this->url('message',array('action'=>'send-obs-ajax'))?>",
+	    async: true,
+	    type: 'POST',
+	    data:form.serialize(),
+	    success: function(result){
+	    	$('#obs').val('');
+	    	showMessages($('.id_calls').val());
+	    	$('#obs-div').fadeOut();
+	    }
+	});
 }
 
 function getCalls(){
@@ -68,8 +100,21 @@ function getCalls(){
 
 getCalls();
 
+function getObsCalls(idCall){
+	$.ajax({
+		url: "<?php echo $this->url('message',array('action'=>'get-obs-call-ajax'))?>",
+	    async: true,
+	    type: 'POST',
+	    data:'idCall='+idCall,
+	    success: function(result){
+	    	$('#obs-list').html(result);
+	    }
+	});
+}
+
 function showMessages(idCall){
-	$('#messages').data('call',idCall);
+	$('.id_calls').val(idCall);
+	$('#panel-calls').removeClass('hidden');
 	$.ajax({
 		url: "<?php echo $this->url('message',array('action'=>'messages-call-ajax'))?>",
 	    async: true,
@@ -77,6 +122,7 @@ function showMessages(idCall){
 	    data:'idCall='+idCall,
 	    success: function(result){
 	    	$('#messages').html(result);
+	    	getObsCalls(idCall);
 	    }
 	});
 }
@@ -94,6 +140,17 @@ function loadAllMessages(){
 }
 loadAllMessages();
 
+function getNmrProtocol(idCall){
+	$.ajax({
+		url: "<?php echo $this->url('message',array('action'=>'get-protocol-call-ajax'))?>",
+	    async: true,
+	    type: 'POST',
+	    data:'idCall='+idCall,
+	    success: function(data){
+	    	$('input[name="message"]').val(data.result);
+	    }
+	});
+}
 
 </script>
     

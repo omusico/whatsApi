@@ -50,6 +50,13 @@ class ConversasAtendimento
     private $dataConversaAtendimento = 'CURRENT_TIMESTAMP';
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="imagem", type="integer", nullable=false)
+     */
+    private $imagem = '0';
+
+    /**
      * @var \Common\Entity\Atendimentos
      *
      * @ORM\ManyToOne(targetEntity="Common\Entity\Atendimentos")
@@ -175,6 +182,30 @@ class ConversasAtendimento
     public function getDataConversaAtendimento()
     {
         return $this->dataConversaAtendimento;
+    }
+
+    /**
+     * Set imagem
+     *
+     * @param integer $imagem
+     *
+     * @return ConversasAtendimento
+     */
+    public function setImagem($imagem)
+    {
+        $this->imagem = $imagem;
+
+        return $this;
+    }
+
+    /**
+     * Get imagem
+     *
+     * @return integer
+     */
+    public function getImagem()
+    {
+        return $this->imagem;
     }
 
     /**

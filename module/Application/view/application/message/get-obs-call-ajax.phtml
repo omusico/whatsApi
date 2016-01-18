@@ -1,0 +1,8 @@
+<?php if(!empty($obsCall)):?>
+    <?php foreach ($obsCall as $values): ?>
+    		<p><i><?php echo $values->getObservacoes();?> </i> </p>
+    		<hr>
+    <?php endforeach; ?>
+<?php else:?>
+			<p><i>Atendimento sem Observações</i></p>
+<?php endif;?>

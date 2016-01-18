@@ -38,6 +38,23 @@ class MessageController extends AbstractActionController
            return $viewModel;
 	}
 	
+	public function sendObsAjaxAction(){
+	    $request  = $this->getRequest();
+	    $debug = false;
+	    $whatsManagerModel = new ManagerWhatsModel($this->getEntityManager(),$this->identity(),$debug);
+	    $whatsManagerModel->connectPassword();
+	
+	    $result   = false;
+	    if($request->isPost()){
+	        $data   = $request->getPost();
+	        $result = $whatsManagerModel->sendObs($data['obs'], $data['idCall']) ;
+	    }
+	     
+	    $viewModel = new ViewModel();
+	    $viewModel->setTerminal(true)->setVariables(array('result' => $result));
+	    return $viewModel;
+	}
+	
 	public function messagesAjaxAction(){
 	    $request   = $this->getRequest();
 	    $debug     = false;
@@ -88,5 +105,31 @@ class MessageController extends AbstractActionController
 	    
 	    return new JsonModel(array('result' => $return));
 	}
-
+	
+	public function getProtocolCallAjaxAction(){
+	    $request   = $this->getRequest();
+	    $result    = null;
+	    if($request->isPost()){
+	        $data          = $request->getPost();
+	        $messageModel  = new MessageModel($this->getEntityManager(), $this->identity());
+	        $call          = $messageModel->getCall($data['idCall']);
+	         
+	        if(!empty($call))
+	            $result    = $call->getProtocoloAtendimento();
+	    }
+	    return new JsonModel(array('result' => $result));
+	}
+	
+	public function getObsCallAjaxAction(){
+        $request    = $this->getRequest();
+        $obsCall    = null;
+        if($request->isPost()){
+            $data           = $request->getPost();
+            $messageModel   = new MessageModel($this->getEntityManager(),$this->identity());
+            $obsCall        = $messageModel->getObsCall($data['idCall']);
+        }
+	    $viewModel = new ViewModel();
+	    $viewModel->setTerminal(true)->setVariables(array('obsCall'=>$obsCall));
+	    return $viewModel;
+	}
 }

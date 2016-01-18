@@ -13,8 +13,7 @@ class MessageModel extends ManagerWhatsModel
 
     /**
      *
-     * @param
-     *            EntityManager
+     * @param  EntityManager
      *            
      */
     private $entityManager;
@@ -63,9 +62,14 @@ class MessageModel extends ManagerWhatsModel
     }
 
     public function getCall($idCall)
-    {
+    {  
         $call = $this->entityManager->getRepository('Common\Entity\Atendimentos')->findOneBy(array('idStatusAtendimentos' => 5,'idAtendimentos' => $idCall));
         return $call;
+    }
+    
+    public function getObsCall($idCall){
+        $obs = $this->entityManager->getRepository('Common\Entity\ObservacoesAtendimentos')->findBy(array('idAtendimentoObservacao'=> $idCall));
+        return $obs;
     }
 }
 
