@@ -36,7 +36,7 @@
                           		<button type="button" class="btn btn-xs btn-primary pull-right" style="margin-top: 10px;">Adicionar</button>
                           	</form>
                       	</div>
-                      	<p>&nbsp;</p>
+                      	<p><a href="javascript:void(0)" onclick="finalizeCall($('.id_calls').val())">Finalizar Pedido</a></p>
                       </div>
                     </div>
                     <div class="panel panel-default">
@@ -68,7 +68,7 @@ function sendMessage(form){
 	    data:form.serialize(),
 	    success: function(result){
 	    	$('#'+id+' input[name="message"]').val('');
-	    	showMessages($('#messages').data('call'));
+	     	showMessages($('.id_calls').val());
 	    }
 	});
 }
@@ -108,6 +108,21 @@ function getObsCalls(idCall){
 	    data:'idCall='+idCall,
 	    success: function(result){
 	    	$('#obs-list').html(result);
+	    }
+	});
+}
+
+function finalizeCall(idCall){
+	$.ajax({
+		url: "<?php echo $this->url('message',array('action'=>'finalize-call-ajax'))?>",
+	    async: true,
+	    type: 'POST',
+	    data:'idCall='+idCall,
+	    success: function(data){
+		    console.log(data);
+	    	getCalls();
+	    	$('#messages').empty();
+	    	$('#panel-calls').addClass('hidden');
 	    }
 	});
 }

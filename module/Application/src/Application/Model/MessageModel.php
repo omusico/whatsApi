@@ -71,5 +71,20 @@ class MessageModel extends ManagerWhatsModel
         $obs = $this->entityManager->getRepository('Common\Entity\ObservacoesAtendimentos')->findBy(array('idAtendimentoObservacao'=> $idCall));
         return $obs;
     }
+    
+    public function finalizeCall($idCall){
+        $call = $this->entityManager->getRepository('Common\Entity\Atendimentos')->findOneBy(array('idAtendimentos' => $idCall));
+        
+        $call->setIdStatusAtendimentos($this->entityManager->getRepository('Common\Entity\StatusAtendimentos')->findOneBy(array('idStatusAtendimentos' => 7)));
+        try{
+            $this->entityManager->persist($call);
+            $this->entityManager->flush();
+        }catch(\Exception $e){
+            $this->setLogTalk("Finalizar Atendimento", $e->getMessage());
+            return false;
+        }
+        
+        return true ;
+    }
 }
 

@@ -132,4 +132,15 @@ class MessageController extends AbstractActionController
 	    $viewModel->setTerminal(true)->setVariables(array('obsCall'=>$obsCall));
 	    return $viewModel;
 	}
+	
+	public function finalizeCallAjaxAction(){
+	    $request    = $this->getRequest();
+	    $result     = false;
+	    if($request->isPost()){
+	        $data           = $request->getPost();
+	        $messageModel   = new MessageModel($this->getEntityManager(),$this->identity());
+	        $result         = $messageModel->finalizeCall($data['idCall']);
+	    }
+	    return new JsonModel(array('result' => $result));
+	}
 }

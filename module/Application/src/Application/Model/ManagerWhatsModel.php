@@ -132,7 +132,7 @@ class ManagerWhatsModel{
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('atendimento')
         ->from('Common\Entity\Atendimentos','atendimento')
-        ->where('atendimento.nmrContato = :to OR atendimento.nmrContato = :from AND atendimento.idStatusAtendimentos IN (5,6)')
+        ->where('(atendimento.nmrContato = :to OR atendimento.nmrContato = :from) AND atendimento.idStatusAtendimentos = 5')
         ->setParameters(array('to' => $to, 'from' => $from));
     
         $serviceClient = $qb->getQuery()->getArrayResult();
@@ -140,7 +140,7 @@ class ManagerWhatsModel{
         if(empty($serviceClient)){
             $date               = date('Ymdhis');
             $protocolService    = md5($from.$date);
-            $serviceClient      = $this->storageServiceClient($protocolService,$to);
+            $serviceClient      = $this->storageServiceClient($protocolService,$from);
         }else{
             $serviceClient      = $this->entityManager->getRepository('Common\Entity\Atendimentos')->findOneBy(array('idAtendimentos'=>$serviceClient[0]['idAtendimentos']));
         }
@@ -176,7 +176,7 @@ class ManagerWhatsModel{
         }
     }
     
-    public function storageServiceClient($protocolService,$nmrContato){
+    public function storageServiceClient($protocolService,  $nmrContato){
         
         $serviceClient = new Atendimentos();
         $serviceClient->setIdStatusAtendimentos($this->entityManager->getRepository('Common\Entity\StatusAtendimentos')->findOneBy(array('idStatusAtendimentos' => 5)));
