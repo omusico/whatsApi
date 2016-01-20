@@ -82,6 +82,7 @@ class MessageController extends AbstractActionController
 	    if($request->isPost()){
 	        $data      = $request->getPost();
 	        $messages  = $messageModel->getMessagesCall($data['idCall']);
+	        $messageModel->setReadMessages($data['idCall']);
 	        
 	    }
 	    
@@ -89,6 +90,26 @@ class MessageController extends AbstractActionController
 	    $viewModel->setTerminal(true)->setVariables(array('messages' => $messages));
 	    return $viewModel;
 	}
+	
+
+	public function messagesUnreadCallAjaxAction(){
+	    $request   = $this->getRequest();
+	    $result    = false;
+	    $debug     = false;
+	    $messageModel = new MessageModel($this->getEntityManager(),$this->identity(),$debug);
+	     
+	    if($request->isPost()){
+	        $data      = $request->getPost();
+	        $messages  = $messageModel->getMessagesUnreadCall($data['idCall']);
+	        $messageModel->setReadMessages($data['idCall']);
+	         
+	    }
+	     
+	    $viewModel = new ViewModel();
+	    $viewModel->setTerminal(true)->setVariables(array('messages' => $messages));
+	    return $viewModel;
+	}
+	
 	
 	public function getCallsAjaxAction(){
 	    $messageModel = new MessageModel($this->getEntityManager(), $this->identity());

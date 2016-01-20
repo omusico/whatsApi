@@ -38,10 +38,10 @@ class MessageModel extends ManagerWhatsModel
                 
                 if ($message->getChild('media')) {
                     $mess = $message->getChild("media");
-                    $this->storageMessage($this->users->getNmWhatsapp(), $number, $mess->getAttribute('url'));
+                    $this->storageMessage($this->users->getNmWhatsapp(),$number, $mess->getAttribute('url'),false,true,$message->getAttribute('notify'));
                 } else {
                     $mess = $message->getChild("body");
-                    $this->storageMessage($this->users->getNmWhatsapp(), $number, $mess->getData());
+                    $this->storageMessage($this->users->getNmWhatsapp(),$number, $mess->getData(),false,false,$message->getAttribute('notify'));
                 }
             }
         }
@@ -52,6 +52,11 @@ class MessageModel extends ManagerWhatsModel
     public function getMessagesCall($idCall)
     {
         $messagesCalls = $this->entityManager->getRepository('Common\Entity\ConversasAtendimento')->findBy(array('idAtendimentoConversas' => $idCall));
+        return $messagesCalls;
+    }
+    
+    public function getMessagesUnreadCall($idCall){
+        $messagesCalls = $this->entityManager->getRepository('Common\Entity\ConversasAtendimento')->findBy(array('idAtendimentoConversas' => $idCall,'idStatusConversas' => 4));
         return $messagesCalls;
     }
 
@@ -85,6 +90,23 @@ class MessageModel extends ManagerWhatsModel
         }
         
         return true ;
+    }
+    
+    public function setReadMessages($idCall){
+        
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->update('Common\Entity\ConversasAtendimento','conversasAtendimento')
+            ->set('conversasAtendimento.idStatusConversas',3)
+            ->where('conversasAtendimento.idAtendimentoConversas = :idCall')
+            ->setParameters(array('idCall' => $idCall));
+        
+        try{
+            return $qb->getQuery()->getResult();
+        }catch(\Exception $e){
+            $this->setLogTalk("Update conversas lidas", $e->getMessage());
+            return false;
+        }
+        
     }
 }
 

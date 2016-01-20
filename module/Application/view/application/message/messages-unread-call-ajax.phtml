@@ -1,11 +1,5 @@
-<div class="panel panel-default">
-      <div class="panel-heading">
-      		<?php echo $this->translate("Mensagens")?>      		
-      </div>
-      <div class="panel-body" style="overflow-y: scroll;height: 400px;">
-      <?php $clipboardMessage = null;?>
+<?php $clipboardMessage = null;?>
       <?php foreach($messages as $values):?>
-      		
       		<?php if($values->getNmrEnviado() != $this->identity()->getNmWhatsapp()):?>
       			<?php $clipboardMessage.= (is_string($values->getNomeContato())?$values->getNomeContato()." - ":"").$values->getNmrEnviado().": ".$values->getMensagem()." \n"; ?>
       		     <?php $number = $values->getNmrEnviado();?>
@@ -35,38 +29,7 @@
                     	</div>
                 	</div>
                 </div>
-            <?php endif;?>
-        <?php endforeach;?>	
-        <div id="new-messages"></div>
-        <div class="text-center">
-        	<button class="btn btn-xs btn-primary" id="copy-button" data-clipboard-text="<?php echo $clipboardMessage;?>">Copiar Mensagens</button>
-        </div>
-      </div>
-      <div class="panel-footer">
-      	<form id="form-<?php echo $number; ?>">
-      		<input type="hidden" name="to" value="<?php echo $number; ?>" >
-          	 <div class="input-group">
-                  <input type="text" class="form-control" name="message" placeholder="Enviar mensagem...">
-                  <span class="input-group-btn">
-                    <button class="btn btn-default" type="button" onclick="sendMessage($('#form-<?php echo $number; ?>'),$(this));">Enviar</button>
-                  </span>
-              </div><!-- /input-group -->
-          </form>
-      </div>
-    </div>
-<script>
-//main.js
-var client = new ZeroClipboard( document.getElementById("copy-button") );
-client.on( "ready", function( readyEvent ) {
-      // alert( "ZeroClipboard SWF is ready!" );
-    
-      client.on( "aftercopy", function( event ) {
-        // `this` === `client`
-        // `event.target` === the element that was clicked
-        //event.target.style.display = "none";
-        //alert("Copied text to clipboard: " + event.data["text/plain"] );
-      } );
-    } );
-
-$('.panel-body').animate({scrollTop: 9999999}, 500);
-</script>
+    	<?php endif;?>
+<?php endforeach;?>
+<div id="clipboard-new-talk" data-new-talk="<?php echo $clipboardMessage?>">
+</div>

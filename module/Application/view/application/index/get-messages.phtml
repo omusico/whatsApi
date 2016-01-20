@@ -10,7 +10,7 @@
     	<div class="col-lg-9 col-md-9">
         	<div class="row">
             	<div class="col-lg-8 col-md-8 col-xs-12">
-            		<div id="messages">
+            		<div id="messages" data-id="0">
             		</div>
             	</div>
             	<div class="col-lg-4 col-md-4 col-xs-12 hidden" id="panel-calls">
@@ -26,14 +26,6 @@
                           		<textarea class="form-control" id="obs" name="obs"></textarea>
                           		<input type="hidden" name="idCall" class="id_calls">
                           		<button type="button" class="btn btn-xs btn-primary pull-right" style="margin-top: 10px;" onclick="sendObs($('#post-obs'))">Adicionar</button>
-                          	</form>
-                      	</div>
-                      	<p><a href="javascript:void(0)" onclick="$('#anexo-div').fadeIn('slow').removeClass('hidden');">Adicionar Anexo</a></p>
-                      	<div id="anexo-div" class="hidden">
-                          	<form id="post-anexo">
-                          		<input type="file" class="form-control">
-                          		<input type="hidden" name="id_calls" class="id_calls">
-                          		<button type="button" class="btn btn-xs btn-primary pull-right" style="margin-top: 10px;">Adicionar</button>
                           	</form>
                       	</div>
                       	<p><a href="javascript:void(0)" onclick="finalizeCall($('.id_calls').val())">Finalizar Pedido</a></p>
@@ -59,7 +51,8 @@
 
 <script>
 
-function sendMessage(form){
+function sendMessage(form,element){
+	element.attr('disabled',true);
 	var id = form.attr('id');
 	$.ajax({
 	    url: "<?php echo $this->url('message',array('action'=>'send-message-ajax'))?>",
@@ -68,6 +61,7 @@ function sendMessage(form){
 	    data:form.serialize(),
 	    success: function(result){
 	    	$('#'+id+' input[name="message"]').val('');
+	    	element.attr('disabled',false);
 	     	showMessages($('.id_calls').val());
 	    }
 	});
@@ -123,12 +117,14 @@ function finalizeCall(idCall){
 	    	getCalls();
 	    	$('#messages').empty();
 	    	$('#panel-calls').addClass('hidden');
+	    	$('#messages').attr('data-id',0);
 	    }
 	});
 }
 
 function showMessages(idCall){
 	$('.id_calls').val(idCall);
+	$('#messages').attr('data-id',idCall);
 	$('#panel-calls').removeClass('hidden');
 	$.ajax({
 		url: "<?php echo $this->url('message',array('action'=>'messages-call-ajax'))?>",
@@ -142,18 +138,22 @@ function showMessages(idCall){
 	});
 }
 
-function loadAllMessages(){
+function showMessagesUnread(idCall){
+	var contact = '';
 	$.ajax({
-		url: "<?php echo $this->url('message',array('action'=>'load-messages-ajax'))?>",
+		url: "<?php echo $this->url('message',array('action'=>'messages-unread-call-ajax'))?>",
 	    async: true,
 	    type: 'POST',
-	    success: function(data){
-	    	console.log(data);
-	    	setTimeout("loadAllMessages();", 15000);
+	    data:'idCall='+idCall,
+	    success: function(result){
+	    	$('#new-messages').append(result);
+	    	$('.panel-body').animate({scrollTop: 9999999}, 500);
+	    	contact = $('#clipboard-new-talk').attr('data-new-talk');
+	    	$('#copy-button').attr('data-clipboard-text',$('#copy-button').attr('data-clipboard-text')+" "+contact);
 	    }
 	});
 }
-loadAllMessages();
+
 
 function getNmrProtocol(idCall){
 	$.ajax({
@@ -166,6 +166,24 @@ function getNmrProtocol(idCall){
 	    }
 	});
 }
+
+/** get news Messages **/
+function loadAllMessages(){
+	$.ajax({
+		url: "<?php echo $this->url('message',array('action'=>'load-messages-ajax'))?>",
+	    async: true,
+	    type: 'POST',
+	    success: function(data){
+	    	console.log(data);
+	    	setTimeout("loadAllMessages();", 15000);
+	    	getCalls();
+	    	
+	    	if($('#messages').attr('data-id') > 0)
+    			showMessagesUnread($('#messages').attr('data-id'));
+	    }
+	});
+}
+loadAllMessages();
 
 </script>
     
