@@ -15,6 +15,7 @@
         "bjyoungblood/bjy-profiler": "dev-master",
         "doctrine/doctrine-orm-module": "0.*",
       	"realestateconz/mssql-bundle" : "master-dev",
-        "whatsapp/chat-api": "^2.5"
+        "whatsapp/chat-api": "^2.5",
+        "zeroclipboard/zeroclipboard": "2.2.*"
     }
 }

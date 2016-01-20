@@ -31,6 +31,13 @@ class Atendimentos
     /**
      * @var string
      *
+     * @ORM\Column(name="nome_contato", type="string", length=50, nullable=true)
+     */
+    private $nomeContato;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="nmr_contato", type="string", length=13, nullable=false)
      */
     private $nmrContato;

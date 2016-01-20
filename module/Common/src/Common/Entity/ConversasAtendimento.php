@@ -24,6 +24,13 @@ class ConversasAtendimento
     /**
      * @var string
      *
+     * @ORM\Column(name="nome_contato", type="string", length=50, nullable=true)
+     */
+    private $nomeContato;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="nmr_enviado", type="string", length=13, nullable=false)
      */
     private $nmrEnviado;
@@ -86,6 +93,30 @@ class ConversasAtendimento
     public function getIdConversas()
     {
         return $this->idConversas;
+    }
+
+    /**
+     * Set nomeContato
+     *
+     * @param string $nomeContato
+     *
+     * @return ConversasAtendimento
+     */
+    public function setNomeContato($nomeContato)
+    {
+        $this->nomeContato = $nomeContato;
+
+        return $this;
+    }
+
+    /**
+     * Get nomeContato
+     *
+     * @return string
+     */
+    public function getNomeContato()
+    {
+        return $this->nomeContato;
     }
 
     /**

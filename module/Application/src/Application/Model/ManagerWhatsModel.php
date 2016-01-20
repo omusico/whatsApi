@@ -114,12 +114,12 @@ class ManagerWhatsModel{
                     $mess = $message->getChild("media");
                     //$mess = $message->getChild("enc");
                     $result[$userSendMessage]['messages'][] = $mess->getAttribute('url');
-                    $this->storageMessage($this->users->getNmWhatsapp(),$number, $mess->getAttribute('url'),false,true);
+                    $this->storageMessage($this->users->getNmWhatsapp(),$number, $mess->getAttribute('url'),false,true,$message->getAttribute('notify'));
                 }else{
                     $mess = $message->getChild("body");
                     //$mess = $message->getChild("enc");
                     $result[$userSendMessage]['messages'][] = $mess->getData();
-                    $this->storageMessage($this->users->getNmWhatsapp(),$number, $mess->getData());
+                    $this->storageMessage($this->users->getNmWhatsapp(),$number, $mess->getData(),false,false,$message->getAttribute('notify'));
                 }
             }
         }
@@ -127,7 +127,7 @@ class ManagerWhatsModel{
         return $result;
     }
     
-    public function storageMessage($to, $from, $message , $isOperator = false, $isImage = false){
+    public function storageMessage($to, $from, $message , $isOperator = false, $isImage = false,$nameContact = false){
     
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('atendimento')
@@ -140,7 +140,7 @@ class ManagerWhatsModel{
         if(empty($serviceClient)){
             $date               = date('Ymdhis');
             $protocolService    = md5($from.$date);
-            $serviceClient      = $this->storageServiceClient($protocolService,$from);
+            $serviceClient      = $this->storageServiceClient($protocolService,$from,$nameContact);
         }else{
             $serviceClient      = $this->entityManager->getRepository('Common\Entity\Atendimentos')->findOneBy(array('idAtendimentos'=>$serviceClient[0]['idAtendimentos']));
         }
@@ -158,11 +158,16 @@ class ManagerWhatsModel{
             else
                 $talk->setIdStatusConversas($this->entityManager->getRepository('Common\Entity\StatusConversas')->findOneBy(array('idStatusConversas'=> 4)));
             
-            if($isImage)
+            if($isImage){
                 $talk->setImagem(1);
-            else 
+            }else{
                 $talk->setImagem(0);
-                
+            }
+             
+            if($nameContact){
+                $talk->setNomeContato($nameContact);
+            }
+            
             try{
                 $this->entityManager->persist($talk);
                 $this->entityManager->flush();
@@ -176,7 +181,7 @@ class ManagerWhatsModel{
         }
     }
     
-    public function storageServiceClient($protocolService,  $nmrContato){
+    public function storageServiceClient($protocolService,  $nmrContato,$nameContact = false){
         
         $serviceClient = new Atendimentos();
         $serviceClient->setIdStatusAtendimentos($this->entityManager->getRepository('Common\Entity\StatusAtendimentos')->findOneBy(array('idStatusAtendimentos' => 5)));
@@ -184,6 +189,10 @@ class ManagerWhatsModel{
         $serviceClient->setProtocoloAtendimento($protocolService);
         $serviceClient->setDataAtendimento(new \DateTime('now'));
         $serviceClient->setNmrContato($nmrContato);
+        
+        if($nameContact){
+            $serviceClient->setNomeContato($nameContact);
+        }
         try{
          		$this->entityManager->persist($serviceClient);
         		$this->entityManager->flush();

@@ -31,6 +31,13 @@ class Atendimentos
     /**
      * @var string
      *
+     * @ORM\Column(name="nome_contato", type="string", length=50, nullable=true)
+     */
+    private $nomeContato;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="nmr_contato", type="string", length=13, nullable=false)
      */
     private $nmrContato;
@@ -96,6 +103,30 @@ class Atendimentos
     public function getProtocoloAtendimento()
     {
         return $this->protocoloAtendimento;
+    }
+
+    /**
+     * Set nomeContato
+     *
+     * @param string $nomeContato
+     *
+     * @return Atendimentos
+     */
+    public function setNomeContato($nomeContato)
+    {
+        $this->nomeContato = $nomeContato;
+
+        return $this;
+    }
+
+    /**
+     * Get nomeContato
+     *
+     * @return string
+     */
+    public function getNomeContato()
+    {
+        return $this->nomeContato;
     }
 
     /**
