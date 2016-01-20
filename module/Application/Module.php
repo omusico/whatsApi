@@ -13,6 +13,7 @@ use Zend\Mvc\MvcEvent;
 use Zend\Session\Config\SessionConfig;
 use Zend\Session\SessionManager;
 use Zend\Session\Container;
+use Zend\Mvc\Router\RouteMatch;
 
 class Module
 {
@@ -41,52 +42,24 @@ class Module
             if (! $match instanceof RouteMatch) {
                 return;
             }
+            
             // Route is whitelisted
             $route = $match->getMatchedRouteName();
             $params = $match->getParams();
             $module = explode('/',$route);
             
+            /*
             if($_SERVER['REMOTE_ADDR'] != '127.0.0.1' && $_SERVER['SERVER_PORT'] != '443') {
                 $url = 'Location: https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
                 header(str_replace( 'www.', '' , $url));
                 exit();
-            }
+            }*/
             
-            
-            
-            if($auth->hasIdentity()){
-                return;
-            }else{
-            
-                $router = $e->getRouter();
-                $url = $router->assemble(array(), array(
-                    'name' => 'application'
-                ));
-            
-                $response = $e->getResponse();
-                $response->getHeaders()->addHeaderLine('Location', $url);
-                $response->setStatusCode(302);
-            
-                return $response;
-            }    
-            
-            
-                if( @$module[0] == 'application'){
+                if( @$module[0] == 'login'){
                     if ($auth->hasIdentity()) {
-                            $router = $e->getRouter();
-                            $url = $router->assemble(array(), array(
-                                'name' => 'messages'
-                            ));
-                            
-                            $response = $e->getResponse();
-                            $response->getHeaders()->addHeaderLine('Location', $url);
-                            $response->setStatusCode(302);
-                            
-                            return $response;
-                    }else{
                         $router = $e->getRouter();
                         $url = $router->assemble(array(), array(
-                            'name' => 'application'
+                            'name' => 'messages'
                         ));
                         
                         $response = $e->getResponse();
@@ -94,9 +67,25 @@ class Module
                         $response->setStatusCode(302);
                         
                         return $response;
+                    }else{
+                        return;
                     }
                 }
-                
+
+                if($auth->hasIdentity()){
+                    return;
+                }else{
+                    $router = $e->getRouter();
+                    $url = $router->assemble(array(), array(
+                        'name' => 'login'
+                    ));
+                    
+                    $response = $e->getResponse();
+                    $response->getHeaders()->addHeaderLine('Location', $url);
+                    $response->setStatusCode(302);
+                    
+                    return $response;
+                }
         
         }, - 100);
     }

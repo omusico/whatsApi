@@ -74,6 +74,17 @@ return array(
                     )
                 )
             ),
+            'login' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/login[/:action[/:id]]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Index',
+                        'action' => 'index',
+                    )
+                )
+            ),
+            
         ),
     ),
     'service_manager' => array(

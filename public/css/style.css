@@ -48,3 +48,8 @@ div.container a.brand {
     -webkit-animation: circleLoad 0.5s infinite linear;
     animation: circleLoad 0.5s infinite linear;
 }
+
+.data-messages{
+	font-size: 65%;
+    float: right;
+}

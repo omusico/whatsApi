@@ -2,11 +2,14 @@
     <?php foreach ($calls as $values):?>
         <a href="javascript:void(0);" class="list-group-item" onclick="showMessages(<?php echo $values->getIdAtendimentos()?>)">
             <div class="row">
-              	<div class="col-md-4">
+              	<div class="col-md-3">
               		<img src="<?php echo $this->basePath('img/lorem-ipsum.jpg'); ?>" class="img-responsive img-circle">
               	</div>
-              	<div class="col-md-8">
-              		<label style="cursor: pointer;"><?echo is_string($values->getNomeContato())?$values->getNomeContato()." - ".$values->getNmrContato():$values->getNmrContato(); ?></label>
+              	<div class="col-md-7">
+              		<p style="cursor: pointer;"><?echo is_string($values->getNomeContato())?$values->getNomeContato()." - ".$values->getNmrContato():$values->getNmrContato(); ?></p>
+              	</div>
+              	<div class="col-md-1">
+              		<span class="badge">42</span>
               	</div>
             </div>
         </a>
