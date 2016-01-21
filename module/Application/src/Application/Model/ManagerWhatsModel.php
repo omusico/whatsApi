@@ -115,6 +115,8 @@ class ManagerWhatsModel{
                     //$mess = $message->getChild("enc");
                     $result[$userSendMessage]['messages'][] = $mess->getAttribute('url');
                     $this->storageMessage($this->users->getNmWhatsapp(),$number, $mess->getAttribute('url'),false,true,$message->getAttribute('notify'));
+                    if(!empty($mess->getAttribute('caption')))
+                        $this->storageMessage($this->users->getNmWhatsapp(),$number, $mess->getAttribute('caption'),false,false,$message->getAttribute('notify'));
                 }else{
                     $mess = $message->getChild("body");
                     //$mess = $message->getChild("enc");
@@ -136,7 +138,10 @@ class ManagerWhatsModel{
         ->setParameters(array('to' => $to, 'from' => $from));
     
         $serviceClient = $qb->getQuery()->getArrayResult();
-    
+        
+        $message = str_replace('“','"',$message);
+        $message = str_replace('”','"',$message);
+        
         if(empty($serviceClient)){
             $date               = date('Ymdhis');
             $protocolService    = md5($from.$date);

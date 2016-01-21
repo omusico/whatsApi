@@ -1,5 +1,6 @@
 <?php $clipboardMessage = null;?>
-      <?php foreach($messages as $values):?>
+	<?php if($result['call']):?>
+      <?php foreach($result['messagesCall'] as $values):?>
       		<?php if($values->getNmrEnviado() != $this->identity()->getNmWhatsapp()):?>
       			<?php $clipboardMessage.= (is_string($values->getNomeContato())?$values->getNomeContato()." - ":"").$values->getNmrEnviado().": ".$values->getMensagem()." \n"; ?>
       		     <?php $number = $values->getNmrEnviado();?>
@@ -44,5 +45,13 @@
                 </div>
     	<?php endif;?>
 <?php endforeach;?>
+<?php else:?>
+	<script>
+		$('#messages').empty();
+		$('#panel-calls').addClass('hidden');
+		$('#obs-list').empty();
+
+	</script>
+<?php endif;?>
 <div id="clipboard-new-talk" data-new-talk="<?php echo $clipboardMessage?>">
 </div>

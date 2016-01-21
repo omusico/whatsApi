@@ -112,6 +112,11 @@ return array(
             'Application\Controller\Message' => 'Application\Controller\MessageController'
         ),
     ),
+    'view_helpers' => array(
+        'invokables' => array(
+            'countMessagesUnread'  => 'Application\View\Helper\Calls',
+        ),
+    ),
     'view_manager' => array(
         'display_not_found_reason' => true,
         'display_exceptions'       => true,

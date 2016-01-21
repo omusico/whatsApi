@@ -39,6 +39,8 @@ class MessageModel extends ManagerWhatsModel
                 if ($message->getChild('media')) {
                     $mess = $message->getChild("media");
                     $this->storageMessage($this->users->getNmWhatsapp(),$number, $mess->getAttribute('url'),false,true,$message->getAttribute('notify'));
+                    if(!empty($mess->getAttribute('caption')))
+                        $this->storageMessage($this->users->getNmWhatsapp(),$number, $mess->getAttribute('caption'),false,false,$message->getAttribute('notify'));
                 } else {
                     $mess = $message->getChild("body");
                     $this->storageMessage($this->users->getNmWhatsapp(),$number, $mess->getData(),false,false,$message->getAttribute('notify'));
@@ -56,8 +58,15 @@ class MessageModel extends ManagerWhatsModel
     }
     
     public function getMessagesUnreadCall($idCall){
-        $messagesCalls = $this->entityManager->getRepository('Common\Entity\ConversasAtendimento')->findBy(array('idAtendimentoConversas' => $idCall,'idStatusConversas' => 4));
-        return $messagesCalls;
+        $call = $this->entityManager->getRepository('Common\Entity\Atendimentos')->findOneBy(array('idAtendimentos'=>$idCall,'idStatusAtendimentos'=>5));
+        if(!empty($call)){
+            $result['call'] = true;
+            $result['messagesCall'] = $this->entityManager->getRepository('Common\Entity\ConversasAtendimento')->findBy(array('idAtendimentoConversas' => $idCall,'idStatusConversas' => 4));
+        }else{
+            $result['call'] = false;
+            $result['messagesCall'] = array();
+        }
+        return $result;
     }
 
     public function getCalls()
@@ -106,7 +115,11 @@ class MessageModel extends ManagerWhatsModel
             $this->setLogTalk("Update conversas lidas", $e->getMessage());
             return false;
         }
-        
+    }
+    
+    public function getCountMessagesUnreadCalls($idCall){
+        $messages = $this->entityManager->getRepository('Common\Entity\ConversasAtendimento')->findBy(array('idAtendimentoConversas' => $idCall,'idStatusConversas'=>4));
+        return count($messages);
     }
 }
 

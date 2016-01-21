@@ -9,7 +9,7 @@
               		<p style="cursor: pointer;"><?echo is_string($values->getNomeContato())?$values->getNomeContato()." - ".$values->getNmrContato():$values->getNmrContato(); ?></p>
               	</div>
               	<div class="col-md-1">
-              		<span class="badge">42</span>
+              		<span class="badge"><?php echo $this->countMessagesUnread($this->identity())->getCountMessage($values->getIdAtendimentos());?></span>
               	</div>
             </div>
         </a>

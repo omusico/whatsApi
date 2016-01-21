@@ -100,13 +100,12 @@ class MessageController extends AbstractActionController
 	     
 	    if($request->isPost()){
 	        $data      = $request->getPost();
-	        $messages  = $messageModel->getMessagesUnreadCall($data['idCall']);
+	        $result  = $messageModel->getMessagesUnreadCall($data['idCall']);
 	        $messageModel->setReadMessages($data['idCall']);
-	         
 	    }
 	     
 	    $viewModel = new ViewModel();
-	    $viewModel->setTerminal(true)->setVariables(array('messages' => $messages));
+	    $viewModel->setTerminal(true)->setVariables(array('result' => $result));
 	    return $viewModel;
 	}
 	
