@@ -1,11 +1,17 @@
-<div class="panel panel-default">
-      <div class="panel-heading">
-      		<?php echo $this->translate("Mensagens")?>      		
-      </div>
+<ul class="nav nav-pills nav-justified"> 
+	<li role="presentation" class="active li-tab">
+		<a href="javascript:void(0);" onclick="tabsAction($(this));" data-id-show="messages-show" data-id-hide="history-calls"><?php echo $this->translate("Mensagens")?>   </a>
+	</li> 
+	<li role="presentation" class="li-tab">
+		<a href="javascript:void(0);" onclick="tabsAction($(this));" data-id-show="history-calls" data-id-hide="messages-show"><?php echo $this->translate("Histórico de Atendimentos")?></a>
+	</li> 
+</ul>
+
+<div id="messages-show">
+	<div class="panel panel-default">
       <div class="panel-body" style="overflow-y: scroll;height: 400px;">
       <?php $clipboardMessage = null;?>
       <?php foreach($messages as $values):?>
-      		
       		<?php if($values->getNmrEnviado() != $this->identity()->getNmWhatsapp()):?>
       			<?php $clipboardMessage.= (is_string($values->getNomeContato())?$values->getNomeContato()." - ":"").$values->getNmrEnviado().": ".$values->getMensagem()." \n"; ?>
       		     <?php $number = $values->getNmrEnviado();?>
@@ -55,7 +61,7 @@
         </div>
       </div>
       <div class="panel-footer">
-      	<form id="form-<?php echo $number; ?>">
+      	<form id="form-<?php echo $number; ?>" class="form-message">
       		<input type="hidden" name="to" value="<?php echo $number; ?>" >
           	 <div class="input-group">
                   <input type="text" class="form-control" name="message" placeholder="Enviar mensagem...">
@@ -66,8 +72,71 @@
           </form>
       </div>
     </div>
+</div>
+<div id="history-calls" style="display: none;">
+	<div class="panel panel-default">
+      <div class="panel-body" style="overflow-y: scroll;height: 400px;">
+      	<?php foreach($messagesOld as $values):?>
+      		<?php if($values->getNmrEnviado() != $this->identity()->getNmWhatsapp()):?>
+      		     <?php $number = $values->getNmrEnviado();?>
+                <div class="row" style="margin-bottom:10px">
+                	<div class="col-lg-12 col-md-12">
+                    	<div class="col-lg-2 col-md-2">
+                    		<img src="<?php echo $this->basePath('img/lorem-ipsum.jpg'); ?>" class="img-responsive img-circle">
+                    	</div>
+                    	<div class="col-lg-8 col-md-8">
+                    		<?php if($values->getImagem() > 0):?>
+                    			<img src="<?php echo $values->getMensagem();?>" class="img-responsive" style="margin-top:15px;">
+                    		<?php else:?>
+                    			<p style="margin-top:15px;"><?php echo $values->getMensagem();?></p>
+                    		<?php endif;?>
+                    	</div>
+                    	<div class="col-lg-2 col-md-2">
+                    			<div style="margin-top:15px;">
+                    				<small class="data-messages"><?php echo $values->getDataConversaAtendimento()->format('H:i');?></small></br>
+                    				<small class="data-messages"><?php echo $values->getDataConversaAtendimento()->format('d/m/y');?></small>
+                    			</div>
+                    	</div>
+                	</div>
+                </div>
+            <?php else:?>
+                <div class="row" style="margin-bottom:10px">
+                	<div class="col-lg-12 col-md-12">
+                		<div class="col-lg-2 col-md-2">
+                    		<div style="margin-top:15px;">
+                    				<small class="data-messages"><?php echo $values->getDataConversaAtendimento()->format('H:i');?></small></br>
+                    				<small class="data-messages"><?php echo $values->getDataConversaAtendimento()->format('d/m/y');?></small>
+                			</div>
+            			</div>
+                    	<div class="col-lg-2 col-md-2 pull-right">
+                    		<img src="<?php echo $this->basePath('img/user-placeholder.png'); ?>" class="img-responsive img-circle">
+                    	</div>
+                    	<div class="col-lg-8 col-md-8">
+                    		<p class="pull-right" style="margin-top:15px;"><?php echo $values->getMensagem();?></p>
+                    	</div>
+                	</div>
+                </div>
+            <?php endif;?>
+        <?php endforeach;?>	
+      </div>
+    </div>
+	
+</div>
 <script>
-//main.js
+
+$('.form-message').on('submit',function(e){
+	e.preventDefault();
+})
+
+function tabsAction(element){
+	$('.li-tab').removeClass('active');
+	element.parent().addClass('active');
+	var idShow = element.attr('data-id-show');
+	var idHide = element.attr('data-id-hide');
+	$('#'+idShow).show();
+	$('#'+idHide).hide();
+}
+
 var client = new ZeroClipboard( document.getElementById("copy-button") );
 client.on( "ready", function( readyEvent ) {
       // alert( "ZeroClipboard SWF is ready!" );

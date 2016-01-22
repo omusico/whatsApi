@@ -15,6 +15,7 @@ use Zend\View\Model\JsonModel;
 use Application\Model\ManagerWhatsModel;
 use Application\Model\MessageModel;
 use WhatsProt;
+use Application\Model\CallsModel;
 
 class MessageController extends AbstractActionController
 {
@@ -74,20 +75,22 @@ class MessageController extends AbstractActionController
 	}
 	
 	public function messagesCallAjaxAction(){
-	    $request   = $this->getRequest();
-	    $result    = false;
-	    $debug     = false;
+	    $request      = $this->getRequest();
+	    $messages     = null;
+	    $messagesOld  = null;
+	    $debug        = false;
 	    $messageModel = new MessageModel($this->getEntityManager(),$this->identity(),$debug);
 	    
 	    if($request->isPost()){
 	        $data      = $request->getPost();
 	        $messages  = $messageModel->getMessagesCall($data['idCall']);
+	        $messagesOld = $messageModel->getAllMessagesClient($data['number']);  
 	        $messageModel->setReadMessages($data['idCall']);
 	        
 	    }
 	    
 	    $viewModel = new ViewModel();
-	    $viewModel->setTerminal(true)->setVariables(array('messages' => $messages));
+	    $viewModel->setTerminal(true)->setVariables(array('messages' => $messages,'messagesOld'=> $messagesOld));
 	    return $viewModel;
 	}
 	
@@ -153,13 +156,25 @@ class MessageController extends AbstractActionController
 	    return $viewModel;
 	}
 	
+	public function pendingCallAjaxAction(){
+	    $request    = $this->getRequest();
+	    $result     = false;
+	    if($request->isPost()){
+	        $data          = $request->getPost();
+	        $callsModel    = new CallsModel($this->getEntityManager(),$this->identity());
+	        $callsModel->setCall($data['idCall']);
+	        $result        = $callsModel->setPendingCall();
+	    }
+	    return new JsonModel(array('result' => $result));
+	}
+	
 	public function finalizeCallAjaxAction(){
 	    $request    = $this->getRequest();
 	    $result     = false;
 	    if($request->isPost()){
-	        $data           = $request->getPost();
-	        $messageModel   = new MessageModel($this->getEntityManager(),$this->identity());
-	        $result         = $messageModel->finalizeCall($data['idCall']);
+	        $data         = $request->getPost();
+	        $callsModel   = new CallsModel($this->getEntityManager(),$this->identity());
+	        $result       = $callsModel->finalizeCall($data['idCall']);
 	    }
 	    return new JsonModel(array('result' => $result));
 	}

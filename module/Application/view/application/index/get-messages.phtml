@@ -16,25 +16,25 @@
             	<div class="col-lg-4 col-md-4 col-xs-12 hidden" id="panel-calls">
             		<div class="panel panel-default">
                       <div class="panel-heading">
-                        <h3 class="panel-title">Painel de Atendimento</h3>
+                        <h3 class="panel-title"><?php echo $this->translate("Painel de Atendimento")?></h3>
                       </div>
                       <div class="panel-body">
-                      	<p><a href="javascript:void(0)" onclick="getNmrProtocol($('.id_calls').val());">Enviar número do protocolo</a></p>
-                      	<p><a href="javascript:void(0)" onclick="$('#obs-div').fadeIn('slow').removeClass('hidden'); ">Adicionar Observação</a></p>
+                      	<p><a href="javascript:void(0)" onclick="getNmrProtocol($('.id_calls').val());"><?php echo $this->translate("Enviar número do protocolo")?></a></p>
+                      	<p><a href="javascript:void(0)" onclick="$('#obs-div').fadeIn('slow').removeClass('hidden'); "><?php echo $this->translate("Adicionar Observação")?></a></p>
                       	<div id="obs-div" class="hidden" style="margin-bottom: 30px;">
                           	<form id="post-obs">
                           		<textarea class="form-control" id="obs" name="obs"></textarea>
                           		<input type="hidden" name="idCall" class="id_calls">
-                          		<button type="button" class="btn btn-xs btn-primary pull-right" style="margin-top: 10px;" onclick="sendObs($('#post-obs'))">Adicionar</button>
+                          		<button type="button" class="btn btn-xs btn-primary pull-right" style="margin-top: 10px;" onclick="sendObs($('#post-obs'))"><?php echo $this->translate("Adicionar")?></button>
                           	</form>
                       	</div>
-                      	<p><a href="javascript:void(0)" onclick="finalizeCall($('.id_calls').val())">Atendimentos Anteriores</a></p>
-                      	<p><a href="javascript:void(0)" onclick="finalizeCall($('.id_calls').val())">Finalizar Atendimento</a></p>
+                      	<p><a href="javascript:void(0)" onclick="pendingCall($('.id_calls').val())"><?php echo $this->translate("Setar atendimento como pendente")?></a></p>
+                      	<p><a href="javascript:void(0)" onclick="finalizeCall($('.id_calls').val())"><?php echo $this->translate("Finalizar Atendimento")?></a></p>
                       </div>
                     </div>
                     <div class="panel panel-default">
                       <div class="panel-heading">
-                        <h3 class="panel-title">Observações do Atendimento</h3>
+                        <h3 class="panel-title"><?php echo $this->translate("Observações do Atendimento")?></h3>
                       </div>
                       <div class="panel-body">
                       	<div id="obs-list">
@@ -51,7 +51,6 @@
  </div> 
 
 <script>
-
 function sendMessage(form,element){
 	element.attr('disabled',true);
 	var id = form.attr('id');
@@ -107,6 +106,18 @@ function getObsCalls(idCall){
 	});
 }
 
+function pendingCall(idCall){
+	$.ajax({
+		url: "<?php echo $this->url('message',array('action'=>'pending-call-ajax'))?>",
+	    async: true,
+	    type: 'POST',
+	    data:'idCall='+idCall,
+	    success: function(data){
+	    	getCalls();
+	    }
+	});
+}
+
 function finalizeCall(idCall){
 	$.ajax({
 		url: "<?php echo $this->url('message',array('action'=>'finalize-call-ajax'))?>",
@@ -123,7 +134,7 @@ function finalizeCall(idCall){
 	});
 }
 
-function showMessages(idCall){
+function showMessages(idCall,nmrContato){
 	$('.id_calls').val(idCall);
 	$('#messages').attr('data-id',idCall);
 	$('#panel-calls').removeClass('hidden');
@@ -131,7 +142,7 @@ function showMessages(idCall){
 		url: "<?php echo $this->url('message',array('action'=>'messages-call-ajax'))?>",
 	    async: true,
 	    type: 'POST',
-	    data:'idCall='+idCall,
+	    data:'idCall='+idCall+'&number='+nmrContato,
 	    success: function(result){
 	    	$('#messages').html(result);
 	    	getObsCalls(idCall);

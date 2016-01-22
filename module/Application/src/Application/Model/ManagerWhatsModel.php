@@ -10,6 +10,7 @@ use Common\Entity\Logs;
 use Common\Entity\Atendimentos;
 use Common\Entity\Usuarios;
 use Common\Entity\ObservacoesAtendimentos;
+use Zend\Filter\StripTags;
 class ManagerWhatsModel{
     
     /**
@@ -109,7 +110,7 @@ class ManagerWhatsModel{
                 $userSendMessage = $message->getAttribute('from');
                 list($number, $whatsAppUrl) = explode('@',$userSendMessage);
                 $result[$userSendMessage]['userSend'] = $message->getAttribute('notify');
-                
+                \Zend\Debug\Debug::dump($message);
                 if($message->getChild('media')){
                     $mess = $message->getChild("media");
                     //$mess = $message->getChild("enc");
@@ -130,11 +131,12 @@ class ManagerWhatsModel{
     }
     
     public function storageMessage($to, $from, $message , $isOperator = false, $isImage = false,$nameContact = false){
-    
+        
+        $filterTag = new StripTags();
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('atendimento')
         ->from('Common\Entity\Atendimentos','atendimento')
-        ->where('(atendimento.nmrContato = :to OR atendimento.nmrContato = :from) AND atendimento.idStatusAtendimentos = 5')
+        ->where('(atendimento.nmrContato = :to OR atendimento.nmrContato = :from) AND atendimento.idStatusAtendimentos IN (5,6)')
         ->setParameters(array('to' => $to, 'from' => $from));
     
         $serviceClient = $qb->getQuery()->getArrayResult();
@@ -155,7 +157,7 @@ class ManagerWhatsModel{
             $talk->setDataConversaAtendimento(new \DateTime('now'));
             $talk->setNmrEnviado($from);
             $talk->setNmrRecebido($to);
-            $talk->setMensagem($message);
+            $talk->setMensagem($filterTag->filter($message));
             $talk->setIdAtendimentoConversas($serviceClient);
         
             if($isOperator)

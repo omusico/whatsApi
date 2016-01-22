@@ -1,6 +1,6 @@
 <?php if(!empty($calls)):?>
     <?php foreach ($calls as $values):?>
-        <a href="javascript:void(0);" class="list-group-item" onclick="showMessages(<?php echo $values->getIdAtendimentos()?>)">
+        <a href="javascript:void(0);" class="list-group-item" onclick="showMessages(<?php echo $values->getIdAtendimentos()?>,<?php echo $values->getNmrContato();?>)">
             <div class="row">
               	<div class="col-md-3">
               		<img src="<?php echo $this->basePath('img/lorem-ipsum.jpg'); ?>" class="img-responsive img-circle">

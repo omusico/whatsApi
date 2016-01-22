@@ -35,7 +35,6 @@ class MessageModel extends ManagerWhatsModel
             foreach ($data as $message) {
                 $userSendMessage = $message->getAttribute('from');
                 list ($number, $whatsAppUrl) = explode('@', $userSendMessage);
-                
                 if ($message->getChild('media')) {
                     $mess = $message->getChild("media");
                     $this->storageMessage($this->users->getNmWhatsapp(),$number, $mess->getAttribute('url'),false,true,$message->getAttribute('notify'));
@@ -58,7 +57,7 @@ class MessageModel extends ManagerWhatsModel
     }
     
     public function getMessagesUnreadCall($idCall){
-        $call = $this->entityManager->getRepository('Common\Entity\Atendimentos')->findOneBy(array('idAtendimentos'=>$idCall,'idStatusAtendimentos'=>5));
+        $call = $this->entityManager->getRepository('Common\Entity\Atendimentos')->findOneBy(array('idAtendimentos'=>$idCall));
         if(!empty($call)){
             $result['call'] = true;
             $result['messagesCall'] = $this->entityManager->getRepository('Common\Entity\ConversasAtendimento')->findBy(array('idAtendimentoConversas' => $idCall,'idStatusConversas' => 4));
@@ -70,8 +69,17 @@ class MessageModel extends ManagerWhatsModel
     }
 
     public function getCalls()
-    {
-        $calls = $this->entityManager->getRepository('Common\Entity\Atendimentos')->findBy(array('idStatusAtendimentos' => 5));
+    {   
+        $query = $this->entityManager->createQueryBuilder();
+        $query->select('atendimentos')
+                ->from('Common\Entity\Atendimentos', 'atendimentos')
+                ->where('atendimentos.idStatusAtendimentos IN (5,6)');
+        try{
+            $calls = $query->getQuery()->getResult();
+        }catch (\Exception $e){
+            $this->setLogTalk("Listar atendimentos abertos/ pendentes", $e->getMessage());
+            return null;
+        }
         return $calls;
     }
 
@@ -86,20 +94,6 @@ class MessageModel extends ManagerWhatsModel
         return $obs;
     }
     
-    public function finalizeCall($idCall){
-        $call = $this->entityManager->getRepository('Common\Entity\Atendimentos')->findOneBy(array('idAtendimentos' => $idCall));
-        
-        $call->setIdStatusAtendimentos($this->entityManager->getRepository('Common\Entity\StatusAtendimentos')->findOneBy(array('idStatusAtendimentos' => 7)));
-        try{
-            $this->entityManager->persist($call);
-            $this->entityManager->flush();
-        }catch(\Exception $e){
-            $this->setLogTalk("Finalizar Atendimento", $e->getMessage());
-            return false;
-        }
-        
-        return true ;
-    }
     
     public function setReadMessages($idCall){
         
@@ -120,6 +114,25 @@ class MessageModel extends ManagerWhatsModel
     public function getCountMessagesUnreadCalls($idCall){
         $messages = $this->entityManager->getRepository('Common\Entity\ConversasAtendimento')->findBy(array('idAtendimentoConversas' => $idCall,'idStatusConversas'=>4));
         return count($messages);
+    }
+    
+    public function getAllMessagesClient($numberClient){
+        
+        $query = $this->entityManager->createQueryBuilder();
+        $query->select('conversasAtendimento')
+                ->from('Common\Entity\ConversasAtendimento', 'conversasAtendimento')
+                ->join('common\Entity\Atendimentos','atendimentos','WITH','atendimentos.idAtendimentos = conversasAtendimento.idAtendimentoConversas')
+                ->where('(conversasAtendimento.nmrRecebido = :numberClient OR conversasAtendimento.nmrEnviado = :numberClient) AND atendimentos.idStatusAtendimentos = 7')
+                ->setParameters(array('numberClient' => $numberClient));
+        
+        try{
+            $conversasAtendimento = $query->getQuery()->getResult();
+        }catch (\Exception $e){
+            $this->setLogTalk("Listar mensagens anteriores", $e->getMessage());
+            return false;
+        }
+        
+        return $conversasAtendimento;
     }
 }
 
