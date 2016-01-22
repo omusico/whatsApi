@@ -2,6 +2,7 @@
 namespace  Application\View\Helper;
 use Zend\View\Helper\AbstractHelper;
 use Application\Model\MessageModel;
+use EmojiModule\Service\Emoji;
 
 class Calls extends AbstractHelper{
     protected $users;
@@ -26,4 +27,5 @@ class Calls extends AbstractHelper{
         
         return $countMessage;
     }
+    
 }
