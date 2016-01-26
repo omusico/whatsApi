@@ -17,7 +17,7 @@ class IqHandler implements Handler
   protected $parent;
   protected $phoneNumber;
 
-  public function IqHandler($parent, $node)
+  public function __construct($parent, $node)
   {
     $this->node         = $node;
     $this->parent       = $parent;
@@ -39,13 +39,6 @@ class IqHandler implements Handler
                 ));
             return;
         }
-        $this->parent->eventManager()->fire("onGetRequestLastSeen",
-            array(
-                $this->phoneNumber,
-                $this->node->getAttribute('from'),
-                $this->node->getAttribute('id'),
-                $this->node->getChild(0)->getAttribute('seconds')
-            ));
     }
 
     if ($this->node->getAttribute('type') == "get"
@@ -218,18 +211,20 @@ class IqHandler implements Handler
     }
     if ($this->node->getChild("status") != null) {
         $child = $this->node->getChild("status");
-        foreach($child->getChildren() as $status)
-        {
-            $this->parent->eventManager()->fire("onGetStatus",
-                array(
-                    $this->phoneNumber,
-                    $status->getAttribute("jid"),
-                    "requested",
-                    $this->node->getAttribute("id"),
-                    $status->getAttribute("t"),
-                    $status->getData()
-                ));
-        }
+        $childs = $child->getChildren();
+        if (isset($childs) && !is_null($childs))
+          foreach($childs as $status)
+          {
+              $this->parent->eventManager()->fire("onGetStatus",
+                  array(
+                      $this->phoneNumber,
+                      $status->getAttribute("jid"),
+                      "requested",
+                      $this->node->getAttribute("id"),
+                      $status->getAttribute("t"),
+                      $status->getData()
+                  ));
+          }
     }
 
     if (($this->node->getAttribute('type') == "error") && ($this->node->getChild("error") != null)) {

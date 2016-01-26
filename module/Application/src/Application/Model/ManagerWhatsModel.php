@@ -54,7 +54,7 @@ class ManagerWhatsModel{
     /** CONNECT WITH PASSWORD CONFIGURE IN BASE **/
     public function connectPassword(){
         $this->managerWhats->connect();
-        $this->managerWhats->loginWithPassword($this->users->getSenhaWhatsap());
+        $this->managerWhats->loginWithPassword($this->users->getSenhaWhatsapp());
         return $this->managerWhats;
     }
     

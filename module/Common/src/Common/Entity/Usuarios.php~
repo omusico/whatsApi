@@ -45,9 +45,9 @@ class Usuarios
     /**
      * @var string
      *
-     * @ORM\Column(name="senha_whatsap", type="string", length=45, nullable=false)
+     * @ORM\Column(name="senha_whatsapp", type="string", length=45, nullable=false)
      */
-    private $senhaWhatsap;
+    private $senhaWhatsapp;
 
     /**
      * @var \DateTime

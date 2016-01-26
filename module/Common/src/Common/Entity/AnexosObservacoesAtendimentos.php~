@@ -39,5 +39,62 @@ class AnexosObservacoesAtendimentos
     private $idObservacaoAtendimento;
 
 
-}
 
+    /**
+     * Get idAnexosObservacoesAtendimentos
+     *
+     * @return integer
+     */
+    public function getIdAnexosObservacoesAtendimentos()
+    {
+        return $this->idAnexosObservacoesAtendimentos;
+    }
+
+    /**
+     * Set nomeAnexo
+     *
+     * @param string $nomeAnexo
+     *
+     * @return AnexosObservacoesAtendimentos
+     */
+    public function setNomeAnexo($nomeAnexo)
+    {
+        $this->nomeAnexo = $nomeAnexo;
+
+        return $this;
+    }
+
+    /**
+     * Get nomeAnexo
+     *
+     * @return string
+     */
+    public function getNomeAnexo()
+    {
+        return $this->nomeAnexo;
+    }
+
+    /**
+     * Set idObservacaoAtendimento
+     *
+     * @param \Common\Entity\ObservacoesAtendimentos $idObservacaoAtendimento
+     *
+     * @return AnexosObservacoesAtendimentos
+     */
+    public function setIdObservacaoAtendimento(\Common\Entity\ObservacoesAtendimentos $idObservacaoAtendimento = null)
+    {
+        $this->idObservacaoAtendimento = $idObservacaoAtendimento;
+
+        return $this;
+    }
+
+    /**
+     * Get idObservacaoAtendimento
+     *
+     * @return \Common\Entity\ObservacoesAtendimentos
+     */
+    public function getIdObservacaoAtendimento()
+    {
+        return $this->idObservacaoAtendimento;
+    }
+}

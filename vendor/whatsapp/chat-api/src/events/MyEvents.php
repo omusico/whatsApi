@@ -36,9 +36,8 @@ class MyEvents extends AllEvents
 //        'onGetMessage',
 //        'onGetNormalizedJid',
 //        'onGetPrivacyBlockedList',
-       'onGetProfilePicture',
+//        'onGetProfilePicture',
 //        'onGetReceipt',
-//        'onGetRequestLastSeen',
 //        'onGetServerProperties',
 //        'onGetServicePricing',
 //        'onGetStatus',
@@ -85,22 +84,5 @@ class MyEvents extends AllEvents
     public function onDisconnect($mynumber, $socket)
     {
         echo "<p>Booo!, Phone number $mynumber is disconnected!</p>";
-    }
-    
-    public function onGetProfilePicture( $mynumber, $from, $type, $data )
-    {
-        if ($type == "preview") {
-            $filename = "preview_" . $target . ".jpg";
-        } else {
-            $filename = $target . ".jpg";
-        }
-        $filename = $filename;
-    
-        $fp = @fopen($filename, "w");
-        if ($fp) {
-            fwrite($fp, $data);
-            fclose($fp);
-    
-        }
     }
 }

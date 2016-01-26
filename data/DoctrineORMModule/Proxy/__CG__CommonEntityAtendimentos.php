@@ -64,10 +64,10 @@ class Atendimentos extends \Common\Entity\Atendimentos implements \Doctrine\ORM\
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', '' . "\0" . 'Common\\Entity\\Atendimentos' . "\0" . 'idAtendimentos', '' . "\0" . 'Common\\Entity\\Atendimentos' . "\0" . 'protocoloAtendimento', '' . "\0" . 'Common\\Entity\\Atendimentos' . "\0" . 'nmrContato', '' . "\0" . 'Common\\Entity\\Atendimentos' . "\0" . 'dataAtendimento', '' . "\0" . 'Common\\Entity\\Atendimentos' . "\0" . 'idStatusAtendimentos', '' . "\0" . 'Common\\Entity\\Atendimentos' . "\0" . 'idUsuarioAtendimento');
+            return array('__isInitialized__', '' . "\0" . 'Common\\Entity\\Atendimentos' . "\0" . 'idAtendimentos', '' . "\0" . 'Common\\Entity\\Atendimentos' . "\0" . 'protocoloAtendimento', '' . "\0" . 'Common\\Entity\\Atendimentos' . "\0" . 'nomeContato', '' . "\0" . 'Common\\Entity\\Atendimentos' . "\0" . 'nmrContato', '' . "\0" . 'Common\\Entity\\Atendimentos' . "\0" . 'dataAtendimento', '' . "\0" . 'Common\\Entity\\Atendimentos' . "\0" . 'idStatusAtendimentos', '' . "\0" . 'Common\\Entity\\Atendimentos' . "\0" . 'idUsuarioAtendimento');
         }
 
-        return array('__isInitialized__', '' . "\0" . 'Common\\Entity\\Atendimentos' . "\0" . 'idAtendimentos', '' . "\0" . 'Common\\Entity\\Atendimentos' . "\0" . 'protocoloAtendimento', '' . "\0" . 'Common\\Entity\\Atendimentos' . "\0" . 'nmrContato', '' . "\0" . 'Common\\Entity\\Atendimentos' . "\0" . 'dataAtendimento', '' . "\0" . 'Common\\Entity\\Atendimentos' . "\0" . 'idStatusAtendimentos', '' . "\0" . 'Common\\Entity\\Atendimentos' . "\0" . 'idUsuarioAtendimento');
+        return array('__isInitialized__', '' . "\0" . 'Common\\Entity\\Atendimentos' . "\0" . 'idAtendimentos', '' . "\0" . 'Common\\Entity\\Atendimentos' . "\0" . 'protocoloAtendimento', '' . "\0" . 'Common\\Entity\\Atendimentos' . "\0" . 'nomeContato', '' . "\0" . 'Common\\Entity\\Atendimentos' . "\0" . 'nmrContato', '' . "\0" . 'Common\\Entity\\Atendimentos' . "\0" . 'dataAtendimento', '' . "\0" . 'Common\\Entity\\Atendimentos' . "\0" . 'idStatusAtendimentos', '' . "\0" . 'Common\\Entity\\Atendimentos' . "\0" . 'idUsuarioAtendimento');
     }
 
     /**
@@ -208,6 +208,28 @@ class Atendimentos extends \Common\Entity\Atendimentos implements \Doctrine\ORM\
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getProtocoloAtendimento', array());
 
         return parent::getProtocoloAtendimento();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setNomeContato($nomeContato)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setNomeContato', array($nomeContato));
+
+        return parent::setNomeContato($nomeContato);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getNomeContato()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getNomeContato', array());
+
+        return parent::getNomeContato();
     }
 
     /**

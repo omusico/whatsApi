@@ -43,7 +43,9 @@
                     <ul class="nav navbar-nav">
                          <?php if($this->identity()):?>
                             <li><a href="<?php echo $this->url('crm',array('action'=>'get-messages')) ?>"><?php echo $this->translate('Ler Mensagens') ?></a></li>
-    						<li><a href="<?php echo $this->url('crm',array('action'=>'register-number')) ?>"><?php echo $this->translate('Registrar número') ?></a></li>
+    						<?php if($this->identity()->getIdStatusUsuarios()->getIdStatusUsuarios() == 7):?>
+    							<li><a href="<?php echo $this->url('crm',array('action'=>'register-number')) ?>"><?php echo $this->translate('Registrar número') ?></a></li>
+    						<?php endif;?>
     						<li><a href="<?php echo $this->url('crm',array('action'=>'logout')) ?>"><?php echo $this->translate('Logout') ?></a></li>
 						<?php endif;?>
                     </ul>
@@ -57,7 +59,7 @@
             <?php echo $this->content; ?>
             <hr>
             <footer>
-                <p>&copy; 2005 - <?php echo date('Y') ?> by Zend Technologies Ltd. <?php echo $this->translate('All rights reserved.') ?></p>
+                <p>&copy; 2005 - <?php echo date('Y') ?> by <a href="http://www.pvmktg.com.br/">Página Viva CRM</a>. <?php echo $this->translate('All rights reserved.') ?></p>
             </footer>
         </div> <!-- /container -->
         <?php echo $this->inlineScript() ?>

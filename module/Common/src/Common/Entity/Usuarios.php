@@ -45,9 +45,9 @@ class Usuarios
     /**
      * @var string
      *
-     * @ORM\Column(name="senha_whatsap", type="string", length=45, nullable=false)
+     * @ORM\Column(name="senha_whatsapp", type="string", length=45, nullable=false)
      */
-    private $senhaWhatsap;
+    private $senhaWhatsapp;
 
     /**
      * @var \DateTime
@@ -151,27 +151,27 @@ class Usuarios
     }
 
     /**
-     * Set senhaWhatsap
+     * Set senhaWhatsapp
      *
-     * @param string $senhaWhatsap
+     * @param string $senhaWhatsapp
      *
      * @return Usuarios
      */
-    public function setSenhaWhatsap($senhaWhatsap)
+    public function setSenhaWhatsapp($senhaWhatsapp)
     {
-        $this->senhaWhatsap = $senhaWhatsap;
+        $this->senhaWhatsapp = $senhaWhatsapp;
 
         return $this;
     }
 
     /**
-     * Get senhaWhatsap
+     * Get senhaWhatsapp
      *
      * @return string
      */
-    public function getSenhaWhatsap()
+    public function getSenhaWhatsapp()
     {
-        return $this->senhaWhatsap;
+        return $this->senhaWhatsapp;
     }
 
     /**

@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c71b4b2a88482a1b76b6c9088bde0e22",
-    "content-hash": "30c54b3e260c41b4c67fc7690c0c9046",
+    "hash": "e182997776c930bc8a741c32599a6698",
+    "content-hash": "9e6c2ea62cd0f04f2d9a05ad0049b286",
     "packages": [
         {
             "name": "bjyoungblood/bjy-profiler",
@@ -922,16 +922,16 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.0.1",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "49ff736bd5d41f45240cec77b44967d76e0c3d25"
+                "reference": "1289d16209491b584839022f29257ad859b8532d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/49ff736bd5d41f45240cec77b44967d76e0c3d25",
-                "reference": "49ff736bd5d41f45240cec77b44967d76e0c3d25",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/1289d16209491b584839022f29257ad859b8532d",
+                "reference": "1289d16209491b584839022f29257ad859b8532d",
                 "shasum": ""
             },
             "require": {
@@ -943,7 +943,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0-dev"
+                    "dev-master": "1.1-dev"
                 }
             },
             "autoload": {
@@ -977,20 +977,20 @@
                 "portable",
                 "shim"
             ],
-            "time": "2015-11-20 09:19:13"
+            "time": "2016-01-20 09:13:37"
         },
         {
             "name": "whatsapp/chat-api",
-            "version": "v2.5.5.4",
+            "version": "v3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/WHAnonymous/Chat-API.git",
-                "reference": "d74db1a225f643013e2082bf11d98776f707678a"
+                "reference": "bb3d60f7b7e47cf1b50a92c8782cb29c2f589284"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WHAnonymous/Chat-API/zipball/d74db1a225f643013e2082bf11d98776f707678a",
-                "reference": "d74db1a225f643013e2082bf11d98776f707678a",
+                "url": "https://api.github.com/repos/WHAnonymous/Chat-API/zipball/bb3d60f7b7e47cf1b50a92c8782cb29c2f589284",
+                "reference": "bb3d60f7b7e47cf1b50a92c8782cb29c2f589284",
                 "shasum": ""
             },
             "require": {
@@ -1026,7 +1026,7 @@
                 "whatsapi",
                 "whatsapp"
             ],
-            "time": "2015-11-02 14:39:24"
+            "time": "2016-01-04 16:28:48"
         },
         {
             "name": "zendframework/zend-developer-tools",
@@ -1379,67 +1379,6 @@
                 "zf2"
             ],
             "time": "2015-10-21 07:40:59"
-        },
-        {
-            "name": "zeroclipboard/zeroclipboard",
-            "version": "v2.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/zeroclipboard/zeroclipboard.git",
-                "reference": "039fb799c916d3730fbc898c2f5ef24581c7e9b7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/zeroclipboard/zeroclipboard/zipball/039fb799c916d3730fbc898c2f5ef24581c7e9b7",
-                "reference": "039fb799c916d3730fbc898c2f5ef24581c7e9b7",
-                "shasum": ""
-            },
-            "type": "component",
-            "extra": {
-                "component": {
-                    "scripts": [
-                        "dist/ZeroClipboard.js"
-                    ],
-                    "files": [
-                        "dist/ZeroClipboard.swf",
-                        "dist/ZeroClipboard.min.js",
-                        "dist/ZeroClipboard.min.map",
-                        "dist/ZeroClipboard.Core.js",
-                        "dist/ZeroClipboard.Core.min.js",
-                        "dist/ZeroClipboard.Core.min.map"
-                    ]
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jon Rohan",
-                    "homepage": "http://jonrohan.me/",
-                    "role": "Developer"
-                },
-                {
-                    "name": "James M. Greene",
-                    "email": "james.m.greene@gmail.com",
-                    "homepage": "http://greene.io/",
-                    "role": "Developer"
-                }
-            ],
-            "description": "The ZeroClipboard library provides an easy way to copy text to the clipboard using an invisible Adobe Flash movie and a JavaScript interface.",
-            "homepage": "http://zeroclipboard.org/",
-            "keywords": [
-                "clip",
-                "clipboard",
-                "clippy",
-                "copy",
-                "cut",
-                "flash",
-                "paste",
-                "zclip"
-            ],
-            "time": "2014-12-29 17:46:14"
         }
     ],
     "packages-dev": [],

@@ -76,7 +76,7 @@ return array(
                 'identity_property' => 'nomeUsuario',
                 'credential_property' => 'senhaUsuario',
                 'credential_callable' => function ($user, $pass) {
-                    return $user->getIdStatusUsuarios()->getIdStatusUsuarios() == 4 && $user->getSenhaUsuario() == $pass;
+                    return ($user->getIdStatusUsuarios()->getIdStatusUsuarios() == 4  || $user->getIdStatusUsuarios()->getIdStatusUsuarios() == 7 ) && $user->getSenhaUsuario() == $pass;
                 }
             )
         )
