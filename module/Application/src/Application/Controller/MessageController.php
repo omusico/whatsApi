@@ -22,16 +22,18 @@ class MessageController extends AbstractActionController
    	public function indexAction(){
    	    return new ViewModel();
    	}
+   	
+   	/** SEND MESSAGE AND STORAGE **/
 	public function sendMessageAjaxAction(){
             $request  = $this->getRequest();
             $debug = false;
-            $whatsManagerModel = new ManagerWhatsModel($this->getEntityManager(),$this->identity(),$debug);
-            $whatsManagerModel->connectPassword();
+            $messageModel = new MessageModel($this->getEntityManager(),$this->identity(),$debug);
+            $messageModel->connectPassword();
             
             $result   = false;
             if($request->isPost()){ 
                 $data   = $request->getPost();
-				$result = $whatsManagerModel->sendMessage($data['to'], $data['message']) ;
+				$result = $messageModel->sendMessage($data['to'], $data['message']) ;
             }
            
            $viewModel = new ViewModel();
@@ -39,16 +41,17 @@ class MessageController extends AbstractActionController
            return $viewModel;
 	}
 	
+	/** STORAGE PS OF THE CALL **/
 	public function sendObsAjaxAction(){
 	    $request  = $this->getRequest();
 	    $debug = false;
-	    $whatsManagerModel = new ManagerWhatsModel($this->getEntityManager(),$this->identity(),$debug);
-	    $whatsManagerModel->connectPassword();
+	    $callModel = new CallsModel($this->getEntityManager(),$this->identity(),$debug);
+	    $callModel->connectPassword();
 	
 	    $result   = false;
 	    if($request->isPost()){
 	        $data   = $request->getPost();
-	        $result = $whatsManagerModel->sendObs($data['obs'], $data['idCall']) ;
+	        $result = $callModel->sendObs($data['obs'], $data['idCall']) ;
 	    }
 	     
 	    $viewModel = new ViewModel();
@@ -56,16 +59,17 @@ class MessageController extends AbstractActionController
 	    return $viewModel;
 	}
 	
+	/** LOAD MESSAGES **/
 	public function messagesAjaxAction(){
 	    $request   = $this->getRequest();
 	    $debug     = false;
-	    $whatsManagerModel = new ManagerWhatsModel($this->getEntityManager(),$this->identity(),$debug);
-	    $whatsManagerModel->connectPassword();
+	    $messageModel = new MessageModel($this->getEntityManager(),$this->identity(),$debug);
+	    $messageModel->connectPassword();
 	    
 	    $result   = false;
 	    if($request->isPost()){
 	        $data   = $request->getPost();
-	        $result = $whatsManagerModel->getMessages() ;
+	        $result = $messageModel->getMessages();
 	    }
 	     
 	    $viewModel = new ViewModel();
@@ -74,6 +78,7 @@ class MessageController extends AbstractActionController
 	    
 	}
 	
+	/** GET MESSAGES SPECIFIC CALL **/
 	public function messagesCallAjaxAction(){
 	    $request      = $this->getRequest();
 	    $messages     = null;
@@ -86,7 +91,6 @@ class MessageController extends AbstractActionController
 	        $messages  = $messageModel->getMessagesCall($data['idCall']);
 	        $messagesOld = $messageModel->getAllMessagesClient($data['number']);  
 	        $messageModel->setReadMessages($data['idCall']);
-	        
 	    }
 	    
 	    $viewModel = new ViewModel();
@@ -94,7 +98,7 @@ class MessageController extends AbstractActionController
 	    return $viewModel;
 	}
 	
-
+    /** SHOW MESSAGES UNREAD **/
 	public function messagesUnreadCallAjaxAction(){
 	    $request   = $this->getRequest();
 	    $result    = false;
@@ -114,14 +118,15 @@ class MessageController extends AbstractActionController
 	
 	
 	public function getCallsAjaxAction(){
-	    $messageModel = new MessageModel($this->getEntityManager(), $this->identity());
-	    $calls = $messageModel->getCalls();
+	    $callModel = new CallsModel($this->getEntityManager(), $this->identity());
+	    $calls     = $callModel->getCalls();
 	    
 	    $viewModel = new ViewModel();
 	    $viewModel->setTerminal(true)->setVariables(array('calls'=> $calls));
 	    return $viewModel;
 	}
 	
+	/** LOAD MESSAGES **/
 	public function loadMessagesAjaxAction(){
 	    $messageModel = new MessageModel($this->getEntityManager(), $this->identity());
 	    $return = $messageModel->loadMessagesReceived();
@@ -129,13 +134,14 @@ class MessageController extends AbstractActionController
 	    return new JsonModel(array('result' => $return));
 	}
 	
+	/** GET NUMBER PROTOCOL AJAX **/
 	public function getProtocolCallAjaxAction(){
 	    $request   = $this->getRequest();
 	    $result    = null;
 	    if($request->isPost()){
 	        $data          = $request->getPost();
-	        $messageModel  = new MessageModel($this->getEntityManager(), $this->identity());
-	        $call          = $messageModel->getCall($data['idCall']);
+	        $callModel  = new CallsModel($this->getEntityManager(), $this->identity());
+	        $call          = $callModel->getCall($data['idCall']);
 	         
 	        if(!empty($call))
 	            $result    = $call->getProtocoloAtendimento();
@@ -143,19 +149,21 @@ class MessageController extends AbstractActionController
 	    return new JsonModel(array('result' => $result));
 	}
 	
+	/** GET OBSERVATIONS OF THE SPECIFIC CALL  **/
 	public function getObsCallAjaxAction(){
         $request    = $this->getRequest();
         $obsCall    = null;
         if($request->isPost()){
             $data           = $request->getPost();
-            $messageModel   = new MessageModel($this->getEntityManager(),$this->identity());
-            $obsCall        = $messageModel->getObsCall($data['idCall']);
+            $callModel      = new CallsModel($this->getEntityManager(),$this->identity());
+            $obsCall        = $callModel->getObsCall($data['idCall']);
         }
 	    $viewModel = new ViewModel();
 	    $viewModel->setTerminal(true)->setVariables(array('obsCall'=>$obsCall));
 	    return $viewModel;
 	}
 	
+	/** SET STATUS PENDING **/
 	public function pendingCallAjaxAction(){
 	    $request    = $this->getRequest();
 	    $result     = false;
@@ -168,6 +176,7 @@ class MessageController extends AbstractActionController
 	    return new JsonModel(array('result' => $result));
 	}
 	
+	/** FINALIZE CALL **/
 	public function finalizeCallAjaxAction(){
 	    $request    = $this->getRequest();
 	    $result     = false;

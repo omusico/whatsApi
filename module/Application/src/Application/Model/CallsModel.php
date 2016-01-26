@@ -33,10 +33,23 @@ class CallsModel extends ManagerWhatsModel{
         return $this->atendimentos;
     }
     
+    public function getCalls()
+    {
+        $query = $this->entityManager->createQueryBuilder();
+        $query->select('atendimentos')
+        ->from('Common\Entity\Atendimentos', 'atendimentos')
+        ->where('atendimentos.idStatusAtendimentos IN (5,6)');
+        try{
+            $calls = $query->getQuery()->getResult();
+        }catch (\Exception $e){
+            $this->setLogTalk("Listar atendimentos abertos/ pendentes", $e->getMessage());
+            return null;
+        }
+        return $calls;
+    }
     
     public function finalizeCall($idCall){
-        $call = $this->entityManager->getRepository('Common\Entity\Atendimentos')->findOneBy(array('idAtendimentos' => $idCall));
-    
+        $call = $this->setCall($idCall);
         $call->setIdStatusAtendimentos($this->entityManager->getRepository('Common\Entity\StatusAtendimentos')->findOneBy(array('idStatusAtendimentos' => 7)));
         try{
             $this->entityManager->persist($call);
@@ -59,6 +72,34 @@ class CallsModel extends ManagerWhatsModel{
             return false;
         }
         return true;
+    }
+    
+    public function sendObs($obsText,$idCall){
+        $call = $this->setCall($idCall);
+        $obs = new ObservacoesAtendimentos();
+        $obs->setIdAtendimentoObservacao($call);
+        $obs->setObservacoes($obsText);
+        $obs->setData(new \DateTime('now'));
+        try{
+            $this->entityManager->persist($obs);
+            $this->entityManager->flush();
+        }catch (\Exception $e){
+            $this->setLogTalk("Gravar Observação", $e->getMessage());
+            return false;
+        }
+    
+        return $obs;
+    }
+    
+    public function getCall($idCall)
+    {
+        $call = $this->entityManager->getRepository('Common\Entity\Atendimentos')->findOneBy(array('idStatusAtendimentos' => 5,'idAtendimentos' => $idCall));
+        return $call;
+    }
+    
+    public function getObsCall($idCall){
+        $obs = $this->entityManager->getRepository('Common\Entity\ObservacoesAtendimentos')->findBy(array('idAtendimentoObservacao'=> $idCall));
+        return $obs;
     }
     
 }

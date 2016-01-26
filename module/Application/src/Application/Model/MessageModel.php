@@ -68,33 +68,7 @@ class MessageModel extends ManagerWhatsModel
         return $result;
     }
 
-    public function getCalls()
-    {   
-        $query = $this->entityManager->createQueryBuilder();
-        $query->select('atendimentos')
-                ->from('Common\Entity\Atendimentos', 'atendimentos')
-                ->where('atendimentos.idStatusAtendimentos IN (5,6)');
-        try{
-            $calls = $query->getQuery()->getResult();
-        }catch (\Exception $e){
-            $this->setLogTalk("Listar atendimentos abertos/ pendentes", $e->getMessage());
-            return null;
-        }
-        return $calls;
-    }
 
-    public function getCall($idCall)
-    {  
-        $call = $this->entityManager->getRepository('Common\Entity\Atendimentos')->findOneBy(array('idStatusAtendimentos' => 5,'idAtendimentos' => $idCall));
-        return $call;
-    }
-    
-    public function getObsCall($idCall){
-        $obs = $this->entityManager->getRepository('Common\Entity\ObservacoesAtendimentos')->findBy(array('idAtendimentoObservacao'=> $idCall));
-        return $obs;
-    }
-    
-    
     public function setReadMessages($idCall){
         
         $qb = $this->entityManager->createQueryBuilder();

@@ -41,6 +41,7 @@ class ManagerWhatsModel{
         $this->events           = new \MyEvents($this->managerWhats);
     }
     
+    /** SET WHATSPROT **/
     public function setWhatsProt($username = null ,$nickname = null ,$debug = false){
         if(!empty($username) && !empty($nickname)){
             $this->managerWhats = new \WhatsProt($username, $nickname,$debug);
@@ -50,12 +51,14 @@ class ManagerWhatsModel{
         return $this->managerWhats;
     }
     
+    /** CONNECT WITH PASSWORD CONFIGURE IN BASE **/
     public function connectPassword(){
         $this->managerWhats->connect();
         $this->managerWhats->loginWithPassword($this->users->getSenhaWhatsap());
         return $this->managerWhats;
     }
     
+    /** SET CONFIGURATION REQUEST CODE**/
     public function requestRegister($codeRegister,$codeRequest = 'sms'){
         $this->managerWhats->codeRequest($codeRequest);
         $result = $this->managerWhats->codeRegister($codeRegister);
@@ -66,7 +69,7 @@ class ManagerWhatsModel{
         return $result;
     }
     
-    
+    /**SEND MESSAGE AND STORAGE **/
     public function sendMessage($to, $message, $files=null){
         
         if(!empty($files))
@@ -83,24 +86,8 @@ class ManagerWhatsModel{
         return $return;
     }
     
-    public function sendObs($obsText,$idCall){
-        $call = $this->entityManager->getRepository('Common\Entity\Atendimentos')->findOneBy(array('idAtendimentos' => $idCall));
-        
-        $obs = new ObservacoesAtendimentos();
-        $obs->setIdAtendimentoObservacao($call);
-        $obs->setObservacoes($obsText);
-        $obs->setData(new \DateTime('now'));
-        try{
-            $this->entityManager->persist($obs);
-            $this->entityManager->flush();
-        }catch (\Exception $e){
-            $this->setLogTalk("Gravar Observação", $e->getMessage());
-            return false;
-        }
-        
-        return $obs;        
-    }
     
+    /** GET MESSAGES AND STORAGE**/
     public function getMessages()
     {
         $result = array();
@@ -110,7 +97,6 @@ class ManagerWhatsModel{
                 $userSendMessage = $message->getAttribute('from');
                 list($number, $whatsAppUrl) = explode('@',$userSendMessage);
                 $result[$userSendMessage]['userSend'] = $message->getAttribute('notify');
-                \Zend\Debug\Debug::dump($message);
                 if($message->getChild('media')){
                     $mess = $message->getChild("media");
                     //$mess = $message->getChild("enc");
@@ -133,17 +119,25 @@ class ManagerWhatsModel{
     public function storageMessage($to, $from, $message , $isOperator = false, $isImage = false,$nameContact = false){
         
         $filterTag = new StripTags();
+       
+        /** SHOW CALL **/
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('atendimento')
         ->from('Common\Entity\Atendimentos','atendimento')
         ->where('(atendimento.nmrContato = :to OR atendimento.nmrContato = :from) AND atendimento.idStatusAtendimentos IN (5,6)')
         ->setParameters(array('to' => $to, 'from' => $from));
     
-        $serviceClient = $qb->getQuery()->getArrayResult();
+        try{
+            $serviceClient = $qb->getQuery()->getArrayResult();
+        }catch(\Exception $e){
+            $this->setLogTalk("Listar atendimentos", $e->getMessage());
+            return false;
+        }
         
         $message = str_replace('“','"',$message);
         $message = str_replace('”','"',$message);
         
+        /** CREATE SERVICE CLIENT **/
         if(empty($serviceClient)){
             $date               = date('Ymdhis');
             $protocolService    = md5($from.$date);
@@ -152,6 +146,7 @@ class ManagerWhatsModel{
             $serviceClient      = $this->entityManager->getRepository('Common\Entity\Atendimentos')->findOneBy(array('idAtendimentos'=>$serviceClient[0]['idAtendimentos']));
         }
          
+        
         if($serviceClient){
             $talk = new ConversasAtendimento();
             $talk->setDataConversaAtendimento(new \DateTime('now'));
@@ -188,6 +183,8 @@ class ManagerWhatsModel{
         }
     }
     
+    
+    /** STORAGE SERVICE CLIENT **/
     public function storageServiceClient($protocolService,  $nmrContato,$nameContact = false){
         
         $serviceClient = new Atendimentos();
@@ -211,7 +208,7 @@ class ManagerWhatsModel{
         return $serviceClient;
     }
     
-      
+    /** CREATE LOGS **/  
     public function setLogTalk($ação,$erro){
         if (!$this->entityManager->isOpen()) {
             $this->entityManager = $this->entityManager->create(
@@ -234,6 +231,7 @@ class ManagerWhatsModel{
         
     }
     
+    /** IMPLEMENTS SEND MESSAGES **/
     protected function sendFiles($to,$files){
             
             set_time_limit(600);

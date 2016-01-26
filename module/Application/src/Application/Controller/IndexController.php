@@ -24,6 +24,7 @@ class IndexController extends AbstractActionController
        return new ViewModel();
     }
 	
+    /** LOGIN **/
     public function loginAction(){
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -44,6 +45,23 @@ class IndexController extends AbstractActionController
         }
         return new ViewModel();
     }
+    /**
+     * ROUTER CRM
+     * */
+    public function getMessagesAction(){
+    
+        $debug = false;
+        $result   = array();
+        $whatsManagerModel = new ManagerWhatsModel($this->getEntityManager(),$this->identity(),$debug);
+        $whatsManagerModel->connectPassword();
+        $result = $whatsManagerModel->getMessages();
+    
+        return new ViewModel(array('result' => $result));
+    }
+    
+    /**
+     * LOGOUT SYSTEM  
+     * */
     public function logoutAction()
     {
         $authService = $this->getServiceLocator()->get('Zend\Authentication\AuthenticationService');
@@ -52,33 +70,8 @@ class IndexController extends AbstractActionController
         $this->flashmessenger()->addSuccessMessage("No momento você não está logado!");
         return $this->redirect()->toRoute('application');
     }
-	public function getMessagesAction(){
-		
-        $debug = false;
-        $result   = array();
-        $whatsManagerModel = new ManagerWhatsModel($this->getEntityManager(),$this->identity(),$debug);
-        $whatsManagerModel->connectPassword();
-        $result = $whatsManagerModel->getMessages();
-        
-        return new ViewModel(array('result' => $result));
-	}
 	
-	public function sendMessageAction(){
-            $request  = $this->getRequest();
-            $debug = false;
-            $whatsManagerModel = new ManagerWhatsModel($this->getEntityManager(),$this->identity(),$debug);
-            $whatsManagerModel->connectPassword();
-            
-            $result   = false;
-            if($request->isPost()){ 
-                $data   = $request->getPost();
-                $files  = $request->getFiles();
-                $result = $whatsManagerModel->sendMessage($data['to'], $data['message'], $files) ;
-            }
-            return new ViewModel(array('result' => $result));
-	}
-	
-	
+	/** REGISTER NUMBER ***/
 	public function registerNumberAction(){
 		
 	    $request = $this->getRequest();
@@ -91,17 +84,16 @@ class IndexController extends AbstractActionController
 			$username = $data['number'];                      // Telephone number including the country code without '+' or '00'.
 			$nickname = $data['nickname'];
 			
-			$w = new WhatsProt($username, $nickname, $debug);
-		    $result = $w->codeRequest('sms');
+			$register = new \Registration($username, $debug);
+		    $result = $register->codeRequest('sms');
 		}
 		
 		return new ViewModel(array('result' => $result,'username' => $username, 'nickname' => $nickname));
 		
 	}
 	
+	/** CONFIGURE NUMBER ***/
 	public function configureNumberAction(){
-	    
-	    
 		$username 	= $this->params()->fromQuery('username',null);
 		$nickname 	= $this->params()->fromQuery('nickname',null);
 		$request  	= $this->getRequest();
@@ -115,9 +107,6 @@ class IndexController extends AbstractActionController
 			$username = $data['username'];  
 			$nickname = $data['nickname'];
 			
-// 			$username = '5511941872988';
-// 			$nickname = 'pvwhats';    
-			    
 			$codeRegister = $data['code'];
 			$w = new WhatsProt($username, $nickname, $debug);
 			$result = $w->codeRegister($codeRegister);
