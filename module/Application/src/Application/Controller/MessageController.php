@@ -29,13 +29,13 @@ class MessageController extends AbstractActionController
             $debug = false;
             $messageModel = new MessageModel($this->getEntityManager(),$this->identity(),$debug);
             $messageModel->connectPassword();
-            
+            $messageModel->deleteFilesDB();
             $result   = false;
             if($request->isPost()){ 
                 $data   = $request->getPost();
 				$result = $messageModel->sendMessage($data['to'], $data['message']) ;
             }
-           
+            $messageModel->deleteFilesDB();
            $viewModel = new ViewModel();
            $viewModel->setTerminal(true)->setVariables(array('result' => $result));
            return $viewModel;
@@ -92,7 +92,7 @@ class MessageController extends AbstractActionController
 	        $messagesOld = $messageModel->getAllMessagesClient($data['number']);  
 	        $messageModel->setReadMessages($data['idCall']);
 	    }
-	    
+	    $messageModel->deleteFilesDB();
 	    $viewModel = new ViewModel();
 	    $viewModel->setTerminal(true)->setVariables(array('messages' => $messages,'messagesOld'=> $messagesOld));
 	    return $viewModel;
@@ -110,7 +110,7 @@ class MessageController extends AbstractActionController
 	        $result  = $messageModel->getMessagesUnreadCall($data['idCall']);
 	        $messageModel->setReadMessages($data['idCall']);
 	    }
-	     
+	     $messageModel->deleteFilesDB();
 	    $viewModel = new ViewModel();
 	    $viewModel->setTerminal(true)->setVariables(array('result' => $result));
 	    return $viewModel;

@@ -60,6 +60,7 @@ function sendMessage(form,element){
 	    type: 'POST',
 	    data:form.serialize(),
 	    success: function(result){
+		    console.log(result);
 	    	$('#'+id+' input[name="message"]').val('');
 	    	element.attr('disabled',false);
 	     	showMessages($('.id_calls').val());

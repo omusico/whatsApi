@@ -53,7 +53,7 @@ class ManagerWhatsModel{
     
     /** CONNECT WITH PASSWORD CONFIGURE IN BASE **/
     public function connectPassword(){
-        $this->managerWhats->connect();
+        $return = $this->managerWhats->connect();
         $this->managerWhats->loginWithPassword($this->users->getSenhaWhatsapp());
         return $this->managerWhats;
     }
@@ -71,17 +71,15 @@ class ManagerWhatsModel{
     
     /**SEND MESSAGE AND STORAGE **/
     public function sendMessage($to, $message, $files=null){
-        
         if(!empty($files))
             $return['midias'] = $this->sendFiles($to, $files);
         
         if(!empty($message)){
             $return['message'] = $this->managerWhats->sendMessage($to, $message);
-            $this->storageMessage($to, $this->users->getNmWhatsapp(), $message,true);
+            $this->storageMessage($to, $this->users->getNmWhatsapp(), $message);
            
-            
             if(empty($return['message']) || !isset($return))
-                $this->setLogTalk('Enviar Mensagem:'.$to, "Não foi possível enviar a mensagem para o cliente");
+                $this->setLogTalk('Enviar Mensagem:'.$to. "Não foi possível enviar a mensagem para o cliente");
         }        
         return $return;
     }

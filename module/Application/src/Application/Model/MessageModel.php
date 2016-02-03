@@ -108,5 +108,13 @@ class MessageModel extends ManagerWhatsModel
         
         return $conversasAtendimento;
     }
+    
+    public function deleteFilesDB(){
+        $pasta = './vendor/whatsapp/chat-api/src/wadata';
+        $file = $pasta."/axolotl-{$this->users->getNmWhatsapp()}.db";
+        if(is_file($file) || is_dir($file))
+            unlink($file);
+    }
 }
+
 
